@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { server } from '../backend'
 
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -27,10 +28,10 @@ export default function profile({match}) {
     const [friends, setFriends] = React.useState([]);    
     const [imagepf, setImagepf] = React.useState('');    
 
-    const { id } = useParams()
+    const { username } = useParams()
                         
     React.useEffect(() => {                 
-        axios.get('https://socia-apps.herokuapp.com/post/profile/' + id)
+        axios.get( server.url + '/post/profile/' + username)
         .then((response) => {            
             console.log(response.data)
             setPosts(response.data.post)            
@@ -50,8 +51,8 @@ export default function profile({match}) {
     };     
 
   return (
-    <Box sx={{ px: 3 }}>                                
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: 8}}>
+    <Box sx={{ px: 3, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: 10}}>
                 <Avatar 
                         alt={userProfile.username}
                         src={imagepf.image_path}
@@ -93,7 +94,7 @@ export default function profile({match}) {
                                                 backgroundImage : 'url('+ post.image_path +')',
                                                 backgroundRepeat: 'no-repeat',
                                                 backgroundSize: 'cover',
-                                                backgroundPosition: 'top',
+                                                backgroundPosition: 'center center',
                                                 minWidth: 216,
                                                 minHeight: 270
                                         }} />   

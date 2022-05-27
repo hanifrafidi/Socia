@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { server } from '../backend'
 
 import { 
   Typography,
@@ -36,7 +37,7 @@ export default function login() {
     formData.append('username', username);          
     formData.append('password', password);      
 
-    axios.post('https://socia-apps.herokuapp.com/user/login', formData)
+    axios.post( server.url + '/user/login', formData)
     .then((response) => {                                                                        
         setModal(false)                 
         console.log(response.data)
@@ -45,6 +46,7 @@ export default function login() {
     })
     .catch((error) => {
         console.log(error.response.data)
+        setModal(false)
     })
 
   }
@@ -58,19 +60,26 @@ export default function login() {
   }
 
   return (
-    <Box
+    <Card
       component='form' 
       onSubmit = {onSubmit}
-      enctype='multipart/form-data'
+      encType='multipart/form-data'
        sx={{ 
           display: 'flex', 
-          px: 25,
+          px: 10,
+          py : 8,
+          mx: 20,
+          my: 10,
+          
           flexDirection: 'column',
           minHeight: '100%',
+          backgroundColor: '#fff',          
         }}>
 
-        <Box sx={{ mt: 5}}>
-          <Typography variant="body1" color='inherit' sx={{ my: 3}} > Username </Typography>
+        <Typography variant='h3' align='center' sx={{ fontWeight: 'bold', mb: 3, color: '#eb5757' }}>SOCIA</Typography>
+
+        <Box>
+          <Typography variant="body1" color='inherit' sx={{ my: 2}}> Username </Typography>
           <TextField
             id='username'
             name='username'
@@ -82,8 +91,8 @@ export default function login() {
            />          
         </Box>
 
-        <Box sx={{ mt: 5}}>
-          <Typography variant="body1" color='inherit' sx={{ my: 3}} > Password </Typography>
+        <Box>
+          <Typography variant="body1" color='inherit' sx={{ my: 2}} > Password </Typography>
           <TextField
             id='password'
             name='password'
@@ -96,7 +105,7 @@ export default function login() {
            <Typography variant='body1' color='text' sx={{ mt: 3, textAlign: 'end', cursor: 'pointer' }} onClick={() => showPassword()}> Show Password</Typography>
         </Box>
         
-        <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 15, mb: 3}}>Submit</Button>
+        <Button type='submit' variant='contained' size='large' fullWidth={true} sx={{ mt: 5, mb: 3, backgroundColor: '#eb5757'}}>Login</Button>
         <Button variant='text' color='inherit' component={Links} to='/register'> Register </Button>
 
         <Modal
@@ -109,6 +118,6 @@ export default function login() {
                   <Button variant='text' color="inherit" onClick={() => setModal(false)}> Close</Button>
               </Box>
          </Modal>
-    </Box>
+    </Card>
   )
 }

@@ -15,46 +15,47 @@ import Login from './component/login'
 
 import Test from './component/test'
 
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import UserProvider from './state/UserContext'
 
 import axios from 'axios';
 
+import background from './background.png'
+
 function App() {  
-  const [datas,setDatas] = React.useState([
-    {
-      img : 'https://images.unsplash.com/photo-1500416149159-461f35b7e5da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80',
-      alt : '0',
-    },
-    {
-      img : 'https://images.unsplash.com/flagged/photo-1553928841-ccac95ad7e72?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
-      alt : '1',
-    },
-    {
-      img : 'https://images.unsplash.com/photo-1623171916712-4f3ec1d37c02?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-      alt : '2',
-    },
-    {
-      img : 'https://images.unsplash.com/photo-1591723714396-14064ef239dc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80',
-      alt : '3',
-    },
-    {
-      img : 'https://images.unsplash.com/photo-1644083584824-70941e7a95cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
-      alt : '4',
-    },
-  ])        
+  const location = useLocation();
+
+  const bgr = ()  => {
+    let bgrImg = ''
+    
+    if(location.pathname === '/login' || location.pathname === '/register'){
+      bgrImg = background      
+    }
+    
+    return bgrImg
+  }
 
   return (    
     <div>
+      
         <UserProvider>
-            <Box sx={{ backgroundColor: '#F2F2F2', p: 0, minHeight: '100vh'}}>
-              <Container maxWidth='md' sx={{ py: 10, backgroundColor: '#FFF', minHeight: '100vh' }}>
+            <Box
+             sx={{ 
+                backgroundColor: '#E3E3E3', 
+                backgroundImage : 'url('+ bgr() +')',
+                backgroundRepeat: 'no-repeat',            
+                backgroundPosition: 'center center',            
+                backgroundSize: 'cover',
+                p: 0, 
+                minHeight: '100vh'
+             }}>
+              <Container maxWidth='md' sx={{ py: 10, minHeight: '100vh' }}>
                 <Navbar></Navbar>
                 <Routes>
                   <Route path='/' element={<Timeline />}></Route>
                   <Route path='/Profile' element={<Profile />}></Route>
-                  <Route path='/profile/:id' element={<Profile />}></Route>
+                  <Route path='/profile/:username' element={<Profile />}></Route>
                   <Route path='/AddPost' element={<AddPost />}></Route>
                   <Route path='/test' element={<Test />}></Route>
                   <Route path='/login' element={<Login />}></Route>

@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { server } from '../backend'
 import { useNavigate, Link as Links } from "react-router-dom";
 
 import Box from '@mui/material/Box';
@@ -63,11 +64,10 @@ export default function addPost() {
         formData.append('comment', JSON.stringify(comment))
         formData.append('like', JSON.stringify(like))                        
 
-        axios.post('https://socia-apps.herokuapp.com/post/', formData)
+        axios.post( server.url +'/post/', formData)
         .then((response) => {                                                 
             console.log(response.data);    
-            setModal(false)
-            // return <Links to="/" />
+            setModal(false)            
             return navigate("/", { replace: true });
         })
         .catch((error) => {
@@ -83,9 +83,11 @@ export default function addPost() {
         onSubmit={onSubmit}
         enctype='multipart/form-data'
         sx={{
-            pt: 11,
-            px: 3,
-            minHeight: '100vh'
+            py: 5,
+            px: 6,
+            mt: 1,
+            minHeight: '100vh',
+            backgroundColor: '#fff'
         }}
     >
         <Box sx={{ minWidth: '100%', mb: 5 }}>
@@ -129,8 +131,8 @@ export default function addPost() {
             />
         </Box>
         
-        <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 4, mb: 3}}>Submit</Button>
-        <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }}>Delete</Button>
+        <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 4, mb: 3, py: 1.5}}>Submit</Button>
+        <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/'>Delete</Button>
 
         <Modal
         open={modal}

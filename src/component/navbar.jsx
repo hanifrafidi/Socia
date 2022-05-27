@@ -36,8 +36,8 @@ export default function navbar() {
 
   return (
     <Box sx={{ display: () => navDisplay() }}>
-        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none'}}>
-            <Container maxWidth='md' sx={{ backgroundColor: 'white', py: 2}}>
+        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none', px: 65.6,}}>
+            <Container maxWidth='md' sx={{ backgroundColor: 'white', py: 1, }}>
             <Toolbar >
                 <Typography 
                     variant="h5"                     
@@ -52,7 +52,7 @@ export default function navbar() {
                         Create a Post
                     </Typography>           
                     { user.userData != '' ? 
-                        <Button variant='text' component={Links} to={"/profile/" + user.accessToken} color="inherit">                                                        
+                        <Button variant='text' component={Links} to={"/profile/" + user.userData} color="inherit">                                                        
                             <Avatar alt={user.userData} src={user.photo} />
                         </Button>    
                         :
