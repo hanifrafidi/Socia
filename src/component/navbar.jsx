@@ -34,16 +34,6 @@ export default function navbar() {
     }
   },[])
 
-  const check = user.userData != '' ? true : false;
-    const checkUser = () => {        
-        if(!check){
-            return navigate("/login", {replace: true})
-        }
-    }    
-    React.useEffect(() => {
-        checkUser()
-    });
-
   return (
     <Box sx={{ display: () => navDisplay() }}>
         <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none'}}>
