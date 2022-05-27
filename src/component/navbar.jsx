@@ -37,7 +37,7 @@ export default function navbar() {
   const check = user.userData != '' ? true : false;
     const checkUser = () => {        
         if(!check){
-            return navigate("/Auth", {replace: true})
+            return navigate("/login", {replace: true})
         }
     }    
     React.useEffect(() => {
