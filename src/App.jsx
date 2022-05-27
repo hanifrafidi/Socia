@@ -43,32 +43,7 @@ function App() {
       img : 'https://images.unsplash.com/photo-1644083584824-70941e7a95cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80',
       alt : '4',
     },
-  ])    
-
-  const ServeUrl = 'http://localhost:5000/';
-
-  React.useEffect(() => {
-    axios.get(ServeUrl + 'post/timeline')
-    .then((response) => {
-      // console.log(response.data)
-      setDatas(response.data)
-    })
-    .catch((error) => {
-      console.error(error.response.data);
-    })
-  }, [])  
-
-  function Posts() {
-    return(
-      datas.map((data,index) => {                
-        return(
-          <Box key={index}>
-            <Post img={data.image_path} caption={data.caption} user={data.user_detail}></Post>            
-          </Box>
-        )
-      })      
-    )
-  }
+  ])        
 
   return (    
     <div>

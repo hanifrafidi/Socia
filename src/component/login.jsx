@@ -36,7 +36,7 @@ export default function login() {
     formData.append('username', username);          
     formData.append('password', password);      
 
-    axios.post('http://localhost:5000/user/login', formData)
+    axios.post('https://socia-apps.herokuapp.com/user/login', formData)
     .then((response) => {                                                                        
         setModal(false)                 
         console.log(response.data)

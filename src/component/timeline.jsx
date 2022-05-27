@@ -6,7 +6,7 @@ import Box from '@mui/material/Box'
 import Post from './post'
 
 export default function timeline() {
-    const ServeUrl = 'http://localhost:5000/';
+    const ServeUrl = 'https://socia-apps.herokuapp.com/';
 
     const [datas,setDatas] = React.useState([])
 
