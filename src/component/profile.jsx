@@ -30,7 +30,7 @@ export default function profile({match}) {
     const { id } = useParams()
                         
     React.useEffect(() => {                 
-        axios.get('http://localhost:5000/post/profile/' + id)
+        axios.get('https://socia-apps.herokuapp.com/post/profile/' + id)
         .then((response) => {            
             console.log(response.data)
             setPosts(response.data.post)            

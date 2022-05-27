@@ -63,7 +63,7 @@ export default function addPost() {
         formData.append('comment', JSON.stringify(comment))
         formData.append('like', JSON.stringify(like))                        
 
-        axios.post('http://localhost:5000/post/', formData)
+        axios.post('https://socia-apps.herokuapp.com/post/', formData)
         .then((response) => {                                                 
             console.log(response.data);    
             setModal(false)

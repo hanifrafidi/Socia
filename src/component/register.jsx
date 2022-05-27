@@ -69,7 +69,7 @@ export default function register() {
       formData.append('email', email);      
       formData.append('password', password);      
 
-      axios.post('http://localhost:5000/user/', formData)
+      axios.post('https://socia-apps.herokuapp.com/user/', formData)
       .then((response) => {                                                                        
           setModal(false)                   
           console.log(response.data)           
