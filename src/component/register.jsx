@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { server } from '../backend'
 import {Link as Links} from 'react-router-dom'
 
 import { 
@@ -69,7 +70,7 @@ export default function register() {
       formData.append('email', email);      
       formData.append('password', password);      
 
-      axios.post('https://socia-apps.herokuapp.com/user/', formData)
+      axios.post( server.url + '/user/', formData)
       .then((response) => {                                                                        
           setModal(false)                   
           console.log(response.data)           
@@ -86,8 +87,14 @@ export default function register() {
       component='form' 
       onSubmit = {onSubmit}
       enctype='multipart/form-data'
-      sx={{ px: 10, display: 'flex', flexDirection: 'column' 
-    }}>      
+      
+      sx={{ 
+        px: 10, 
+        py: 10,
+        display: 'flex', 
+        flexDirection: 'column', 
+        backgroundColor: '#fff' }}
+    >      
 
         <Typography variant="h6" color='inherit' >Create your Account</Typography>        
 
@@ -161,7 +168,7 @@ export default function register() {
         </Box>
 
         <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 15, mb: 3}}>Submit</Button>
-        <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/'>Delete</Button>
+        <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/login'>Delete</Button>
 
         <Modal
           open={modal}          

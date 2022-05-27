@@ -4,14 +4,15 @@ import axios from 'axios'
 import Box from '@mui/material/Box'
 
 import Post from './post'
+import { server } from '../backend'
 
 export default function timeline() {
-    const ServeUrl = 'https://socia-apps.herokuapp.com/';
+    
 
     const [datas,setDatas] = React.useState([])
 
     React.useEffect(() => {
-      axios.get(ServeUrl + 'post/timeline')
+      axios.get(server.url + '/post/timeline')
       .then((response) => {
         // console.log(response.data)
         setDatas(response.data)

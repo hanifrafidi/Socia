@@ -23,7 +23,7 @@ export default function post(props) {
   };
   
   return (
-    <Box sx={{ px: 3, py: 5}}>
+    <Box sx={{ px: 5, pt: 5, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
         <Card sx={{ 
             p: 0,
             backgroundImage : 'url('+ props.img +')',
@@ -34,9 +34,9 @@ export default function post(props) {
             minHeight: 500
         }}>            
         </Card>
-        <Box sx={{ display: 'flex', alignItems: 'center', py: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', py: 4 }}>
             <Box sx={{ flexGrow : 1}}>
-                <Box component = {Links} to={'/profile/' + props.user[0]._id} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none'}}>
+                <Box component = {Links} to={'/profile/' + props.user[0].username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>
                 {/* {console.log(props.user[0].username)}
                 {console.log(props.user[0].profile.image_path)} */}
                 <Avatar 
@@ -60,8 +60,8 @@ export default function post(props) {
                 </IconButton>
             </Box>
         </Box>
-        <Box>
-            <Typography variant="body1">{props.caption}</Typography>
+        <Box sx={{ mb: 3}}>
+            <Typography variant="h6" color='text'>{props.caption}</Typography>
         </Box>
         <Collapse in={open} timeout="auto" unmountOnExit>
             <Comments ></Comments>
