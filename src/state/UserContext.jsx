@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 
 export const UserContext = createContext({
     user : {
-        userData : '',
+        user : '',
         accessToken: '',
         photo: '',
     },    
@@ -13,10 +13,10 @@ export const UserContext = createContext({
 
 const UserProvider = (props) => {
     const [user, setUser] = useState({
-        userData : localStorage.getItem("user") != null ? localStorage.getItem("user") : '',
+        user : localStorage.getItem("user") != null ? JSON.parse(localStorage.getItem("user")) : '',
         accessToken : localStorage.getItem("token") != null ? localStorage.getItem("token") : '',
         photo : localStorage.getItem("photo") != null ? localStorage.getItem("photo") : ''
-        // userData : '',
+        // user : '',
         // accessToken : ''
     })    
     const navigate = useNavigate()
@@ -43,11 +43,11 @@ const loginUser = (user,response,setUser,navigate) => {
         return console.log('error : ', response)
     }else{            
         localStorage.setItem("token", response.accessToken)
-        localStorage.setItem("user", response.user.username)
+        localStorage.setItem("user", JSON.stringify(response.user))        
         localStorage.setItem("photo", response.user.profile.image_path)
         setUser( {
                 ...user,
-                userData : localStorage.getItem("user"),
+                user : JSON.parse(localStorage.getItem("user")),
                 accessToken : localStorage.getItem("token"),    
                 photo : localStorage.getItem("photo")        
         })    
@@ -59,7 +59,7 @@ const logoutUser = (user,setUser,navigate) => {
     localStorage.clear();
     setUser(  {
         ...user,
-        userData : '',
+        user : '',
         accessToken : ''
     })
 

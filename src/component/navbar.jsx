@@ -24,15 +24,15 @@ export default function navbar() {
           return 'none'
       }
       return ''
-  }
+  }  
 
-  React.useEffect(() => {
-    if(user.userData === ''){
-        return navigate("/login", {replace: true}) 
-    }else{
-        ''
-    }
-  },[])
+//   React.useEffect(() => {
+//     if(user.user === ''){
+//         return navigate("/login", {replace: true}) 
+//     }else{
+//         // console.log(user)
+//     }
+//   },[])
 
   return (
     <Box sx={{ display: () => navDisplay() }}>
@@ -51,9 +51,9 @@ export default function navbar() {
                     <Typography variant="button" component={Links} to='/AddPost' sx={{ mr: 4, textDecoration: 'none', color: 'inherit' }}>
                         Create a Post
                     </Typography>           
-                    { user.userData != '' ? 
-                        <Button variant='text' component={Links} to={"/profile/" + user.userData} color="inherit">                                                        
-                            <Avatar alt={user.userData} src={user.photo} />
+                    { user.user != '' ? 
+                        <Button variant='text' component={Links} to={"/" + user.user.username} color="inherit">                                                        
+                            <Avatar alt={user.user.username} src={user.user.profile.image_path} />
                         </Button>    
                         :
                         <Button variant='text' component={Links} to="/login" color="inherit">

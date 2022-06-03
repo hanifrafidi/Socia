@@ -15,12 +15,14 @@ import TextField from '@mui/material/TextField';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { styled } from '@mui/material/styles';
 
+import { Player } from "video-react";
+
 import { UserContext } from '../state/UserContext'
 
 export default function addPost() {
     const {user}  = React.useContext(UserContext)
 
-    const [preview, setPreview] = React.useState([])
+    const [preview, setPreview] = React.useState('')
     const [image, setImage] = React.useState([])
     const [caption, setCaption] = React.useState([])
 
@@ -42,9 +44,19 @@ export default function addPost() {
             setPreview(reader.result);                        
             setImage(reader.result);
         }                 
+        // var url = URL.createObjectURL(file.originFileObj);
+        // seVideoSrc(url);
+
+        // setPreview(url);
 
         // setImage(file)
     }    
+
+    const handleChange = (event) => {
+        const file = event.target.files[0];
+        const url = URL.createObjectURL(file);
+        setPreview(url);
+      };
     
     const onSubmit = (event) => {
         event.preventDefault();        
@@ -58,11 +70,7 @@ export default function addPost() {
         let formData = new FormData();
         formData.append('files', image);
         formData.append('caption', caption);
-        formData.append('user_id', user.accessToken);
-        formData.append('hashtag', JSON.stringify(hashtag));
-        formData.append('date', 222);
-        formData.append('comment', JSON.stringify(comment))
-        formData.append('like', JSON.stringify(like))                        
+        formData.append('user_id', user.accessToken);                                  
 
         axios.post( server.url +'/post/', formData)
         .then((response) => {                                                 
@@ -71,10 +79,19 @@ export default function addPost() {
             return navigate("/", { replace: true });
         })
         .catch((error) => {
+            setModal(false)
             console.log(error)
         })
 
     }
+
+      React.useEffect(() => {
+        if(user.user === ''){
+            return navigate("/login", {replace: true}) 
+        }else{
+            // console.log(user)
+        }
+        },[])
 
   return (
     <Box
@@ -92,29 +109,39 @@ export default function addPost() {
     >
         <Box sx={{ minWidth: '100%', mb: 5 }}>
             <Typography variant='h6' component='div' sx={{ mb: 3}}>Upload your file</Typography>
-            <label htmlFor="contained-button-file">
-            <Input id="contained-button-file" multiple type="file" accept="image/jpeg,image/png,image/jpg" onChange={uploadImage}/>
-            <Card 
-                sx={{ 
-                    minHeight: 500, 
-                    minWidth: '100%', 
-                    cursor: 'pointer', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    backgroundImage: 'url('+ preview +')',
-                    backgroundPosition: 'center center',
-                    backgroundSize: 'cover' 
-                }}
-            >
-                <IconButton size="large">
-                    <CameraAltIcon fontSize="large" />
-                </IconButton>
-                <Typography variant='subtitle1' component='div'>Upload your file</Typography>
+                <Box my={5}>
+                <label htmlFor="icon-button-file">
                 
+                    <Input accept="image/*" id="icon-button-file" type="file" onChange={uploadImage}/>
+                    <Box sx={{display: 'flex', justifyContent: 'center'}}>
+                        <IconButton aria-label="upload picture" component="span">
+                            <CameraAltIcon fontSize="large" />
+                        </IconButton>
+                    </Box>
+                    <Typography variant='subtitle1' component='div' textAlign='center'>Upload your file</Typography>                            
+                
+                </label>
+                </Box>
+        </Box>
+        <Box my={3}>
+            { preview === '' ? '' :
+            <Card 
+                    sx={{ 
+                        minHeight: 500, 
+                        minWidth: '100%', 
+                        cursor: 'pointer', 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        backgroundImage: 'url('+ preview +')',
+                        backgroundPosition: 'center center',
+                        backgroundSize: 'cover' 
+                    }}
+                >
+
             </Card>
-            </label>
+            }
         </Box>
         <Box sx={{ minWidth: '100%' }}>
             <Typography variant='h6' component='div' sx={{ mb: 3}}>Caption</Typography>
@@ -130,6 +157,17 @@ export default function addPost() {
                 onChange={(e) => setCaption(e.target.value)}
             />
         </Box>
+
+        {/* <Box>
+            Video
+            <Player
+                playsInline
+                src={preview}
+                fluid={false}
+                width={'100%'}
+                height={600}
+            />    
+        </Box> */}
         
         <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 4, mb: 3, py: 1.5}}>Submit</Button>
         <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/'>Delete</Button>

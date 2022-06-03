@@ -54,6 +54,7 @@ function App() {
                 <Navbar></Navbar>
                 <Routes>
                   <Route path='/' element={<Timeline />}></Route>
+                  <Route path='/:username' element={<Profile />}></Route>
                   <Route path='/Profile' element={<Profile />}></Route>
                   <Route path='/profile/:username' element={<Profile />}></Route>
                   <Route path='/AddPost' element={<AddPost />}></Route>

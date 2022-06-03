@@ -15,12 +15,13 @@ import {
   Modal
 } from '@mui/material'
 
-import { useLocation, Link as Links} from "react-router-dom";
+import { useNavigate, Link as Links} from "react-router-dom";
 
 import {UserContext} from '../state/UserContext'
 
 export default function login() {
   const {login,user} = React.useContext(UserContext)
+  const navigate = useNavigate()
 
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
@@ -45,7 +46,7 @@ export default function login() {
         return login(response.data)
     })
     .catch((error) => {
-        console.log(error.response.data)
+        console.log(error)
         setModal(false)
     })
 
@@ -58,6 +59,15 @@ export default function login() {
     }
     return setShowPass('password') 
   }
+
+    React.useEffect(() => {
+    
+    if(user.user !== ''){
+          return navigate("/", {replace: true}) 
+      }else{
+          // console.log(user)
+      }
+    },[])
 
   return (
     <Card
