@@ -89,8 +89,10 @@ export default function register() {
       enctype='multipart/form-data'
       
       sx={{ 
-        px: 10, 
-        py: 10,
+        px: { xs : 3, md: 10 },
+        py : { xs : 5, md: 8 },
+        mx: { xs : 2, md: 20 },
+        my: { xs : 0, md: 10 },
         display: 'flex', 
         flexDirection: 'column', 
         backgroundColor: '#fff' }}

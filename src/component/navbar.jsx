@@ -36,8 +36,8 @@ export default function navbar() {
 
   return (
     <Box sx={{ display: () => navDisplay() }}>
-        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none', px: 65.6,}}>
-            <Container maxWidth='md' sx={{ backgroundColor: 'white', py: 1, }}>
+        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none', px: { xs: 0, md: 65.6} }}>                                                                                
+            <Container maxWidth='md' sx={{ backgroundColor: 'white', py: 1, px: { xs: 0 } }}>
             <Toolbar >
                 <Typography 
                     variant="h5"                     
@@ -48,21 +48,24 @@ export default function navbar() {
                     SOCIA
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center'}}>
-                    <Typography variant="button" component={Links} to='/AddPost' sx={{ mr: 4, textDecoration: 'none', color: 'inherit' }}>
+                    <Typography variant="button" component={Links} to='/AddPost' sx={{ mr: {xs: 0, md: 2}, textDecoration: 'none', color: 'inherit' }}>
                         Create a Post
                     </Typography>           
                     { user.user != '' ? 
                         <Button variant='text' component={Links} to={"/" + user.user.username} color="inherit">                                                        
-                            <Avatar alt={user.user.username} src={user.user.profile.image_path} />
+                            <Avatar alt={user.user.username} src={user.user.profile.image_path}
+                                sx= {{ 
+                                    width : { xs : 30, md: 40 },
+                                    height : { xs : 30, md: 40 },                                    
+                                }}
+                            
+                            />
                         </Button>    
                         :
                         <Button variant='text' component={Links} to="/login" color="inherit">
                             Login
                         </Button>    
-                    }
-                    {/* <Button variant='text' component={Links} to="/Profile">
-                        <Avatar alt="Remy Sharp" src="https://images.unsplash.com/photo-1649214489153-88e679a6f7be?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" />
-                    </Button>     */}                
+                    }                    
                 </Box>
             </Toolbar>            
             </Container>

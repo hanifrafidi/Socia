@@ -93,7 +93,7 @@ export default function post(props) {
   }
   
   return (
-    <Box sx={{ px: 5, pt: 5, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
+    <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
         <Card sx={{ 
             p: 0,
             backgroundImage : 'url('+ props.img +')',
@@ -101,33 +101,37 @@ export default function post(props) {
             backgroundPosition: 'center center',            
             backgroundSize: 'cover',
             minWidth: '100%',
-            minHeight: 500
+            minHeight: {xs: 200, md: 500}
         }}>            
         </Card>
-        <Box sx={{ display: 'flex', alignItems: 'center', py: 4 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
             <Box sx={{ flexGrow : 1}}>
                 <Box component = {Links} to={'/' + props.user[0].username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
                 <Avatar 
                     alt={props.user[0].username}
                     src={props.user[0].profile.image_path}
-                    sx={{ mr: 2}}
+                    sx={{ 
+                        mr: {xs: 1, md: 2},
+                        width : { xs : 30, md: 40 },
+                        height : { xs : 30, md: 40 }
+                    }}
                 />
-                <Typography variant="body1" component="div" color="inherit" sx={{ mr: 4 }}>
+                <Typography variant='body1' component="div" color="inherit" sx={{ mr: {xs: 2, md: 4} }}>
                         {props.user[0].username}
                 </Typography>
                 </Box>
             </Box>
             <Box sx={{display: 'flex', alignItems: 'center'}}>
-                <Typography variant="body1" sx={{ mr: 1}}> {likeCount} </Typography>
+                <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}> {likeCount} </Typography>
                 {checkLike()}
-                <Typography variant="body1" sx={{ mr: 1}}>{commentCount} </Typography>
+                <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}>{commentCount} </Typography>
                 <IconButton aria-label="chat" onClick={() => handleClick()}>
                     <ChatBubbleOutlineIcon />
                 </IconButton>
             </Box>
         </Box>
-        <Box sx={{ mb: 3}}>
-            <Typography variant="h6" color='text'>{props.caption}</Typography>
+        <Box sx={{ mb: {xs : 2, md: 3}}}>
+            <Typography variant='body2' color='text'>{props.caption}</Typography>
         </Box>
         <Collapse in={open} timeout="auto" unmountOnExit>
             <Comments open={open} posts={props.data} comments={props.data.comment}></Comments>

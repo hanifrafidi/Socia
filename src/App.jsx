@@ -50,7 +50,7 @@ function App() {
                 p: 0, 
                 minHeight: '100vh'
              }}>
-              <Container maxWidth='md' sx={{ py: 10, minHeight: '100vh' }}>
+              <Container maxWidth='md' sx={{ py: 10, minHeight: '100vh', px: 0 }}>
                 <Navbar></Navbar>
                 <Routes>
                   <Route path='/' element={<Timeline />}></Route>
