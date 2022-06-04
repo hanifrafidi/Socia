@@ -101,7 +101,7 @@ export default function addPost() {
         enctype='multipart/form-data'
         sx={{
             py: 5,
-            px: 6,
+            px: {xs : 2, md: 6},
             mt: 1,
             minHeight: '100vh',
             backgroundColor: '#fff'

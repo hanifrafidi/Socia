@@ -132,16 +132,16 @@ export default function profile({match}) {
     }
 
   return (
-    <Box sx={{ px: 3, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: 10}}>
+    <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
                 <Avatar 
                         alt={userProfile.username}
                         src={imagepf.image_path}
-                        sx={{ mb: 3, height: 170, width: 170 }}
+                        sx={{ mb: 3, height: {xs: 120, md: 170}, width: {xs: 120, md: 170} }}
                 />
                 <Typography variant="h4" component="div" sx={{ mb: 1}}>{userProfile.username}</Typography>
                 <Typography variant="body1" component="div">Tokyo</Typography>                
-                <Box sx={{ mt: 5, minWidth: '100%', px: 30}}>
+                <Box sx={{ mt: 5, minWidth: '100%', px: {xs: 5, md: 30}}}>
                 {
                     user.user.username === userProfile.username ? 
                         ''
@@ -157,34 +157,33 @@ export default function profile({match}) {
         </Box>
         <Box>
             <TabContext value={value}>
-                <Box sx={{ borderColor: 'divider', display: 'flex', justifyContent: 'center', mb: 3}}>
+                <Box sx={{ borderColor: 'divider', display: 'flex', justifyContent: 'center', mb: {xs: 1, md: 3}}}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ display: 'flex', justifyContent: 'center'}}>
-                        <Tab label="Posts" value="1" sx={{ mx: 5}}/>
-                        <Tab label="Friend" value="2" sx={{ mx: 5}}/>
-                        <Tab label="Circle" value="3" sx={{ mx: 5}}/>
+                        <Tab label="Posts" value="1" sx={{ mx: {xs: 0, md: 5}}}/>
+                        <Tab label="Friend" value="2" sx={{ mx: {xs: 0, md: 5}}}/>
+                        <Tab label="Circle" value="3" sx={{ mx: {xs: 0, md: 5}}}/>
                     </TabList>
                 </Box>
-                <TabPanel value="1" sx={{ px: 0, }}>
+                <TabPanel value="1" sx={{ px: 0 }}>
                     <Grid 
                         container
                         direction="row"
-                        justifyContent="space-between"
-                        
-                        spacing={1}
-                        sx={{ minHeight : '100vh'}}
+                        justifyContent="space-between"                        
+                        spacing={{xs : 0.5, md: 1}}
+                        sx={{ minHeight : 'auto', pb: 15 }}
                     >
                         {
                             posts.map((post, index) => {
                                 return(
-                                    <Grid item xs={4} key={index}>
+                                    <Grid item xs={4} md={4} key={index} sx={{ maxHeight : 270, mb: {xs : 0.5, md: 1},  }}>
                                         <Card sx={{ 
                                                 p: 0,
                                                 backgroundImage : 'url('+ post.image_path +')',
                                                 backgroundRepeat: 'no-repeat',
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center center',
-                                                minWidth: 216,
-                                                minHeight: 270
+                                                minWidth: {xs: 70},
+                                                minHeight: {xs: 90, md: 270}
                                         }} />   
                                     </Grid>
                                 )

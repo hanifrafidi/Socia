@@ -76,10 +76,10 @@ export default function login() {
       encType='multipart/form-data'
        sx={{ 
           display: 'flex', 
-          px: 10,
-          py : 8,
-          mx: 20,
-          my: 10,
+          px: { xs : 3, md: 10 },
+          py : { xs : 5, md: 8 },
+          mx: { xs : 2, md: 20 },
+          my: { xs : 0, md: 10 },
           
           flexDirection: 'column',
           minHeight: '100%',
@@ -89,30 +89,30 @@ export default function login() {
         <Typography variant='h3' align='center' sx={{ fontWeight: 'bold', mb: 3, color: '#eb5757' }}>SOCIA</Typography>
 
         <Box>
-          <Typography variant="body1" color='inherit' sx={{ my: 2}}> Username </Typography>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}}> Username </Typography>
           <TextField
             id='username'
             name='username'
             type='text'
             variant='outlined'
-            size='medium'
+            size='small'
             onChange={(e) => setUsername(e.target.value)}
             fullWidth
            />          
         </Box>
 
         <Box>
-          <Typography variant="body1" color='inherit' sx={{ my: 2}} > Password </Typography>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}} > Password </Typography>
           <TextField
             id='password'
             name='password'
             type={showPass}
             variant='outlined'
-            size='medium'
+            size='small'
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
            />          
-           <Typography variant='body1' color='text' sx={{ mt: 3, textAlign: 'end', cursor: 'pointer' }} onClick={() => showPassword()}> Show Password</Typography>
+           <Typography variant='body2' color='text' sx={{ mt: 3, textAlign: 'end', cursor: 'pointer' }} onClick={() => showPassword()}> Show Password</Typography>
         </Box>
         
         <Button type='submit' variant='contained' size='large' fullWidth={true} sx={{ mt: 5, mb: 3, backgroundColor: '#eb5757'}}>Login</Button>
