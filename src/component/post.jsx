@@ -101,7 +101,7 @@ export default function post(props) {
             backgroundPosition: 'center center',            
             backgroundSize: 'cover',
             minWidth: '100%',
-            minHeight: {xs: 200, md: 500}
+            minHeight: {xs: 250, md: 500}
         }}>            
         </Card>
         <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
