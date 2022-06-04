@@ -183,7 +183,7 @@ export default function profile({match}) {
                                                 backgroundSize: 'cover',
                                                 backgroundPosition: 'center center',
                                                 minWidth: {xs: 70},
-                                                minHeight: {xs: 90, md: 270}
+                                                minHeight: {xs: 120, md: 270}
                                         }} />   
                                     </Grid>
                                 )
