@@ -12,7 +12,8 @@ import {
   Button,
   Link,
   TextField,
-  Modal
+  Modal,
+  Alert
 } from '@mui/material'
 
 import { useNavigate, Link as Links} from "react-router-dom";
@@ -26,6 +27,7 @@ export default function login() {
   const [username, setUsername] = React.useState('')
   const [password, setPassword] = React.useState('')
 
+  const [error, setError] = React.useState(false)
   const [modal, setModal] = React.useState(false)
 
 
@@ -47,7 +49,8 @@ export default function login() {
     })
     .catch((error) => {
         console.log(error)
-        setModal(false)
+        setError(true)
+        setModal(false)        
     })
 
   }
@@ -98,6 +101,7 @@ export default function login() {
             size='small'
             onChange={(e) => setUsername(e.target.value)}
             fullWidth
+            required
            />          
         </Box>
 
@@ -111,9 +115,17 @@ export default function login() {
             size='small'
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
+            required
            />          
            <Typography variant='body2' color='text' sx={{ mt: 3, textAlign: 'end', cursor: 'pointer' }} onClick={() => showPassword()}> Show Password</Typography>
         </Box>
+
+        {
+          error ? 
+          <Alert severity="error" sx={{ mt: 3}}>username or password is incorrect</Alert>
+          :
+          ''
+        }
         
         <Button type='submit' variant='contained' size='large' fullWidth={true} sx={{ mt: 5, mb: 3, backgroundColor: '#eb5757'}}>Login</Button>
         <Button variant='text' color='inherit' component={Links} to='/register'> Register </Button>

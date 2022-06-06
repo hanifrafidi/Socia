@@ -9,6 +9,7 @@ import Timeline from './component/timeline'
 import Profile from './component/profile'
 import AddPost from './component/addPost'
 import Register from './component/register'
+import Detail from "./component/detail";
 
 // import Auth from './component/auth'
 import Login from './component/login'
@@ -34,11 +35,10 @@ function App() {
     }
     
     return bgrImg
-  }
-
+  }  
+    
   return (    
-    <div>
-      
+    <div>      
         <UserProvider>
             <Box
              sx={{ 
@@ -50,7 +50,7 @@ function App() {
                 p: 0, 
                 minHeight: '100vh'
              }}>
-              <Container maxWidth='md' sx={{ py: 10, minHeight: '100vh', px: 0 }}>
+              <Container maxWidth='md' sx={{ pt: {xs: 9, md : 10}, pb: 5, minHeight: '100vh', px: 0 }}>
                 <Navbar></Navbar>
                 <Routes>
                   <Route path='/' element={<Timeline />}></Route>
@@ -60,6 +60,7 @@ function App() {
                   <Route path='/AddPost' element={<AddPost />}></Route>
                   <Route path='/test' element={<Test />}></Route>
                   <Route path='/login' element={<Login />}></Route>
+                  <Route path='/detail/:id_post' element={<Detail />}></Route>
                   <Route path='/register' element={<Register />}></Route>
                   {/* <Route path='/auth' element={<Auth />}></Route> */}
                 </Routes>            

@@ -91,10 +91,15 @@ export default function post(props) {
     </IconButton>
     )
   }
+
+  const detailPage = () => {
+    return navigate("/detail/" + props.data._id), {replace: true}
+  }
   
   return (
     <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
-        <Card sx={{ 
+        <Card             
+        sx={{ 
             p: 0,
             backgroundImage : 'url('+ props.img +')',
             backgroundRepeat: 'no-repeat',            
@@ -102,7 +107,9 @@ export default function post(props) {
             backgroundSize: 'cover',
             minWidth: '100%',
             minHeight: {xs: 250, md: 500}
-        }}>            
+        }}
+        onClick={detailPage}
+        >            
         </Card>
         <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
             <Box sx={{ flexGrow : 1}}>
@@ -125,17 +132,15 @@ export default function post(props) {
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}> {likeCount} </Typography>
                 {checkLike()}
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}>{commentCount} </Typography>
-                <IconButton aria-label="chat" onClick={() => handleClick()}>
+                <IconButton aria-label="chat" onClick={detailPage}>
                     <ChatBubbleOutlineIcon />
                 </IconButton>
             </Box>
         </Box>
         <Box sx={{ mb: {xs : 2, md: 3}}}>
-            <Typography variant='body2' color='text'>{props.caption}</Typography>
+            <Typography variant='body1' color='text'>{props.caption}</Typography>
         </Box>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-            <Comments open={open} posts={props.data} comments={props.data.comment}></Comments>
-        </Collapse>
+        
     </Box>
   )
 }
