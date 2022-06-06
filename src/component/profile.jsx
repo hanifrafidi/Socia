@@ -17,14 +17,15 @@ import TabPanel from '@mui/lab/TabPanel';
 import Card from '@mui/material/Card';
 
 import {UserContext}  from '../state/UserContext'
-import {useNavigate, useLocation, useParams, Link as Links} from 'react-router-dom'
+import {useNavigate, useParams, Link as Links} from 'react-router-dom'
 
 export default function profile({match}) {
     const [value, setValue] = React.useState('1');
-    const navigate = useNavigate();
+    const navigate = useNavigate();    
     const {user, logout} = React.useContext(UserContext)    
+    const [user_name,SetUsername] = React.useState('')
 
-    const [userProfile,setProfile] = React.useState([]);
+    const [userProfile,setProfile] = React.useState({});
     const [posts,setPosts] = React.useState([]);
     const [friendStatus, setFriendStatus] = React.useState('');
     const [friends, setFriends] = React.useState([]);    
@@ -73,6 +74,11 @@ export default function profile({match}) {
         
     },[])
 
+    const movePage = (user_name) => {
+        // return navigate("/" + user_name, { replace: true });
+        SetUsername(user_name)
+    }
+
     const addFriend = () => {        
         if(user.user === ''){
             return navigate("/login", {replace: true}) 
@@ -105,7 +111,7 @@ export default function profile({match}) {
 
         if(check){
             return(
-                <Button  variant="outlined" color="warning" fullWidth={true} onClick={deleteFriend}>Delete Friend</Button>
+                <Button  variant="outlined" color="inherit" fullWidth={true} onClick={deleteFriend}>Delete Friend</Button>
             )
         }else{
             return(
@@ -132,82 +138,88 @@ export default function profile({match}) {
     }
 
   return (
-    <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
-        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
-                <Avatar 
-                        alt={userProfile.username}
-                        src={imagepf.image_path}
-                        sx={{ mb: 3, height: {xs: 120, md: 170}, width: {xs: 120, md: 170} }}
-                />
-                <Typography variant="h4" component="div" sx={{ mb: 1}}>{userProfile.username}</Typography>
-                <Typography variant="body1" component="div">Tokyo</Typography>                
-                <Box sx={{ mt: 5, minWidth: '100%', px: {xs: 5, md: 30}}}>
-                {
-                    user.user.username === userProfile.username ? 
+    <div>
+        {userProfile._id !== 'undefined' ?
+            <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
+            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
+                    <Avatar 
+                            alt={userProfile.username}
+                            src={imagepf.image_path}
+                            sx={{ mb: 3, height: {xs: 120, md: 170}, width: {xs: 120, md: 170} }}
+                    />
+                    <Typography variant="h4" component="div" sx={{ mb: 1}}>{userProfile.username}</Typography>
+                    <Typography variant="body1" component="div">Tokyo</Typography>                
+                    <Box sx={{ mt: 5, minWidth: '100%', px: {xs: 5, md: 30}}}>
+                    {
+                        user.user.username === userProfile.username ? 
+                            ''
+                        : checkFriend()                    
+                    }                       
+
+                    { user.user.username === userProfile.username ? 
+                        <Button color="warning" variant="text" sx={{ my: 3}} onClick={logout} fullWidth={true}>Logout</Button>
+                        :
                         ''
-                    : checkFriend()                    
-                }                       
+                    }
+                    </Box>
+            </Box>
+            <Box>
+                <TabContext value={value}>
+                    <Box sx={{ borderColor: 'divider', display: 'flex', justifyContent: 'center', mb: {xs: 1, md: 3}}}>
+                        <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ display: 'flex', justifyContent: 'center'}}>
+                            <Tab label="Posts" value="1" sx={{ mx: {xs: 0, md: 5}}}/>
+                            <Tab label="Friend" value="2" sx={{ mx: {xs: 0, md: 5}}}/>
+                            <Tab label="Circle" value="3" sx={{ mx: {xs: 0, md: 5}}}/>
+                        </TabList>
+                    </Box>
+                    <TabPanel value="1" sx={{ px: 0 }}>
+                        <Grid 
+                            container
+                            direction="row"
+                            justifyContent="space-between"                        
+                            spacing={{xs : 0.5, md: 1}}
+                            sx={{ minHeight : 'auto', pb: 15 }}
+                        >
+                            {
+                                posts.map((post, index) => {
+                                    return(
+                                        <Grid item xs={4} md={4} key={index} sx={{ maxHeight : 270, mb: {xs : 0.5, md: 1},  }} component={Links} to={'/detail/' + post._id}>
+                                            <Card 
+                                             sx={{ 
+                                                    p: 0,
+                                                    backgroundImage : 'url('+ post.image_path +')',
+                                                    backgroundRepeat: 'no-repeat',
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center center',
+                                                    minWidth: {xs: 70},
+                                                    minHeight: {xs: 120, md: 270}
+                                            }} />   
+                                        </Grid>
+                                    )
+                                })
+                            }                        
+                        </Grid>
+                    </TabPanel>
+                    <TabPanel value="2">
+                        
+                            {
+                                friends.map((friend, index) => {
+                                    return(
+                                        <Box sx={{display: 'flex', alignItems:'center', mb: 5,  textDecoration: 'none', color: 'black'}} key={index} onClick={() => movePage(friend.username)}>
+                                            <Avatar alt={friend.username} src={friend.profile.image_path} sx={{ mr: 3}} />
+                                            <Typography variant='h6'>{friend.username}</Typography>                                    
+                                        </Box>
+                                    )
 
-                { user.user.username === userProfile.username ? 
-                    <Button color="warning" variant="text" sx={{ my: 3}} onClick={logout} fullWidth={true}>Logout</Button>
-                    :
-                    ''
-                }
-                </Box>
-        </Box>
-        <Box>
-            <TabContext value={value}>
-                <Box sx={{ borderColor: 'divider', display: 'flex', justifyContent: 'center', mb: {xs: 1, md: 3}}}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ display: 'flex', justifyContent: 'center'}}>
-                        <Tab label="Posts" value="1" sx={{ mx: {xs: 0, md: 5}}}/>
-                        <Tab label="Friend" value="2" sx={{ mx: {xs: 0, md: 5}}}/>
-                        <Tab label="Circle" value="3" sx={{ mx: {xs: 0, md: 5}}}/>
-                    </TabList>
-                </Box>
-                <TabPanel value="1" sx={{ px: 0 }}>
-                    <Grid 
-                        container
-                        direction="row"
-                        justifyContent="space-between"                        
-                        spacing={{xs : 0.5, md: 1}}
-                        sx={{ minHeight : 'auto', pb: 15 }}
-                    >
-                        {
-                            posts.map((post, index) => {
-                                return(
-                                    <Grid item xs={4} md={4} key={index} sx={{ maxHeight : 270, mb: {xs : 0.5, md: 1},  }}>
-                                        <Card sx={{ 
-                                                p: 0,
-                                                backgroundImage : 'url('+ post.image_path +')',
-                                                backgroundRepeat: 'no-repeat',
-                                                backgroundSize: 'cover',
-                                                backgroundPosition: 'center center',
-                                                minWidth: {xs: 70},
-                                                minHeight: {xs: 120, md: 270}
-                                        }} />   
-                                    </Grid>
-                                )
-                            })
-                        }                        
-                    </Grid>
-                </TabPanel>
-                <TabPanel value="2">
-                    
-                        {
-                            friends.map((friend, index) => {
-                                return(
-                                    <Box sx={{display: 'flex', alignItems:'center', mb: 5,  textDecoration: 'none', color: 'black'}} key={index} component={Links} to={'/' + friend.username}>
-                                        <Avatar alt={friend.username} src={friend.profile.image_path} sx={{ mr: 3}} />
-                                        <Typography variant='h6'>{friend.username}</Typography>                                    
-                                    </Box>
-                                )
-
-                            })
-                        }                    
-                </TabPanel>
-                <TabPanel value="3">Circle</TabPanel>
-            </TabContext>
-        </Box>
-    </Box>
+                                })
+                            }                    
+                    </TabPanel>
+                    <TabPanel value="3">Circle</TabPanel>
+                </TabContext>
+            </Box>
+            </Box>
+            : ''
+        }
+    </div>
   )
 }

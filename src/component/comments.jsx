@@ -12,6 +12,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
+
 
 export default function comments(props) {
     const [open, setOpen] = React.useState(props.open)
@@ -31,7 +33,7 @@ export default function comments(props) {
         axios.post(server.url + '/post/comment/' + props.posts._id, formData)
         .then(response => {
             console.log(response.data)            
-            setCommentList(commentList => commentList.concat(response.data.comment))
+            setCommentList([response.data.comment].concat(commentList));
         })
         .catch(error => {
             console.log(error)            
@@ -41,7 +43,7 @@ export default function comments(props) {
     const callComment = () => {
         let formData = new FormData()
         formData.append('post_id', props.posts._id);
-        formData.append('comment', JSON.stringify(props.comments));
+        formData.append('comment', JSON.stringify(props.comments));        
 
         axios.post(server.url + '/post/commentt', formData)
         .then(response => {
@@ -80,20 +82,20 @@ export default function comments(props) {
             <Typography variant='subtitle1' component='div'>Filter</Typography>
         </Box>
         <Box 
-            sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }} 
+            sx={{ mt: 5, display: 'flex', justifyContent: 'space-between' }} 
             component='form' 
             enCtype='multipart/form-data'
             onSubmit={onSubmit}
         >
             <TextField 
-                sx={{ width: '70%' }} 
+                sx={{ width: '100%', pr: 5 }} 
                 id="standard-basic" 
                 label="Write your comment here" 
                 variant="standard" 
                 onChange={(e) => setNewComment(e.target.value)}  
             />            
 
-            <Button variant='text' type='submit' color='primary' sx={{ p: 0}}>Enter</Button>
+            <Button variant='contained' size='small' type='submit' color='primary' sx={{ px: 4 }}>Submit</Button>
         </Box>
         <Box>
             {                
@@ -101,20 +103,23 @@ export default function comments(props) {
                     
                     commentList.map((comment,index) => {
                         return (                            
-                            <Box sx={{ mt: 8}} key={index}>                
-                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-                                    <Avatar 
-                                        alt={comment.userDetail.username}
-                                        src={comment.userDetail.profile.image_path} 
-                                        sx={{ mr: 2}}
-                                        component={Links}
-                                        to={'/'+ comment.userDetail.username}
-                                    />
-                                    <Typography variant='subtitle1' component='div' sx={{ flexGrow: 1 }}>{comment.userDetail.username}</Typography>
-                                    <Typography variant='subtitle1' component='div'>{changeDate(comment.date)}</Typography>
-                                </Box>
-                                <Typography variant='subtitle2' component='div' sx={{ ml: 7}} >{comment.comment}</Typography>
-                            </Box>                                               
+                            <div>
+                                <Box sx={{ mt: 8}} key={index}>                                            
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                                        <Avatar 
+                                            alt={comment.userDetail.username}
+                                            src={comment.userDetail.profile.image_path} 
+                                            sx={{ mr: 2}}
+                                            component={Links}
+                                            to={'/'+ comment.userDetail.username}
+                                        />
+                                        <Typography variant='subtitle1' component='div' sx={{ flexGrow: 1 }}>{comment.userDetail.username}</Typography>
+                                        <Typography variant='subtitle1' component='div'>{changeDate(comment.date)}</Typography>
+                                    </Box>
+                                    <Typography variant='subtitle2' component='div' sx={{ ml: 7}} >{comment.comment}</Typography>                                    
+                                </Box>                      
+                                <Divider sx={{ mt: 5}}/>
+                            </div>                                                     
                             )
                     })                                        
                 : ''
