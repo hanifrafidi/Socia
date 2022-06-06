@@ -103,8 +103,8 @@ export default function comments(props) {
                     
                     commentList.map((comment,index) => {
                         return (                            
-                            <div>
-                                <Box sx={{ mt: 8}} key={index}>                                            
+                            <div  key={index}>
+                                <Box sx={{ mt: 8}}>                                            
                                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                                         <Avatar 
                                             alt={comment.userDetail.username}
