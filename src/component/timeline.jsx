@@ -45,8 +45,9 @@ export default function timeline() {
       var formData = new FormData()
       formData.append('page', page);
       formData.append('limit', limit);
+      formData.append('user_id', userId);
 
-      axios.post(server.url + '/post/timeline/' + userId, formData)
+      axios.post(server.url + '/post/timeline', formData)
       .then((response) => {                                      
         if(response.data.posts.length !== 0) {          
           setDatas([...datas, ...response.data.posts])
