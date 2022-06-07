@@ -187,7 +187,7 @@ export default function profile({match}) {
                         <Grid 
                             container
                             direction="row"
-                            justifyContent="space-between"                        
+                            // justifyContent="space-between"                        
                             spacing={{xs : 0.5, md: 1}}
                             sx={{ minHeight : 'auto', pb: 15 }}
                         >
