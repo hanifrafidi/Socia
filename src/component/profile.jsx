@@ -20,13 +20,14 @@ import TabPanel from '@mui/lab/TabPanel';
 import Card from '@mui/material/Card';
 
 import {UserContext}  from '../state/UserContext'
-import {useNavigate, useParams, Link as Links} from 'react-router-dom'
+import {useNavigate, useParams, Link as Links, useSearchParams} from 'react-router-dom'
 
 export default function profile({match}) {
     const [value, setValue] = React.useState('1');
     const navigate = useNavigate();    
     const {user, logout} = React.useContext(UserContext)    
-    
+    let [searchParams, setSearchParams] = useSearchParams();
+
 
     const [userProfile,setProfile] = React.useState({});
     const [posts,setPosts] = React.useState([]);
@@ -35,21 +36,21 @@ export default function profile({match}) {
     const [imagepf, setImagepf] = React.useState('');
 
     const [error, setError] = React.useState(false)
-    const [isLoading, setisLoading] = React.useState(true)
+    const [isLoading, setIsLoading] = React.useState(true)
 
     const { username } = useParams()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-    };
+    };    
 
-    const getProfile = () => { 
+    const getProfile = (user_name) => { 
         let data = new FormData()
         
         if(user.user !== ''){                        
             data.append('id_viewer', user.user._id)
             
-            axios.post( server.url + '/post/profile/' + username, data)
+            axios.post( server.url + '/post/profile/' + user_name, data)
             .then((response) => {            
                 console.log(response.data)
                 setPosts(response.data.post)            
@@ -57,6 +58,10 @@ export default function profile({match}) {
                 setFriends(response.data.profile.friend_profile)
                 setFriendStatus(response.data.friend_status)            
                 setImagepf(response.data.profile.profile)
+
+                setTimeout(()=> {
+                    setIsLoading(false)
+                }, 300)
             })
             .catch((err) => {
                 console.log(err.response.data.message)
@@ -70,6 +75,10 @@ export default function profile({match}) {
                 setFriends(response.data.profile.friend_profile)            
                 setFriendStatus(response.data.friend_status)
                 setImagepf(response.data.profile.profile)
+
+                setTimeout(()=> {
+                    setIsLoading(false)
+                }, 300)
             })
             .catch((err) => {
                 console.log(err)
@@ -78,16 +87,22 @@ export default function profile({match}) {
         }   
     }
                         
-    React.useEffect(() => {                      
-        
+    React.useEffect(() => {                              
         setTimeout(()=> {
-            getProfile()        
+            getProfile(username)        
         }, 300)
     },[])
 
     const movePage = (user_name) => {
+        navigate('/' + user_name, { replace: true })
+        // location.reload();
         // return navigate("/" + user_name, { replace: true });
-        SetUsername(user_name)
+        // history.push('/dresses?color=blue')
+        // SetUsername(user_name)
+        setIsLoading(true)        
+        setTimeout(()=> {
+            getProfile(user_name)        
+        }, 300)
     }
 
     const addFriend = () => {        
@@ -150,7 +165,9 @@ export default function profile({match}) {
 
   return (
     <div>        
-        {userProfile._id !== undefined ?
+        {
+            
+        !isLoading ?
             <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
                     <Avatar 
@@ -159,7 +176,7 @@ export default function profile({match}) {
                             sx={{ mb: 3, height: {xs: 120, md: 170}, width: {xs: 120, md: 170} }}
                     />
                     <Typography variant="h4" component="div" sx={{ mb: 1}}>{userProfile.username}</Typography>
-                    <Typography variant="body1" component="div">Tokyo</Typography>                
+                    {/* <Typography variant="body1" component="div">Tokyo</Typography>                 */}
                     <Box sx={{ mt: 5, minWidth: '100%', px: {xs: 5, md: 30}}}>
                     {
                         user.user.username === userProfile.username ? 
