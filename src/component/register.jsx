@@ -79,6 +79,7 @@ export default function register() {
       })
       .catch((error) => {
           console.log(error)
+          setModal(false)
       })
 
   }
