@@ -147,7 +147,7 @@ export default function detail() {
               <Box sx={{ flexGrow : 1}}>
                   <Box component = {Links} to={'/' + userDetail.username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
                   {
-                  user.user._id !== undefined ? 
+                  user.user !== '' ? 
                     <Avatar 
                         alt={userDetail.username}
                         src={profile.image_path}
