@@ -1,6 +1,9 @@
 import React from 'react'
 import axios from 'axios'
+
 import { server } from '../backend'
+import Loader from '../component/loader'
+import SkeletonPost from '../component/skeleton/post'
 
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -23,7 +26,7 @@ export default function profile({match}) {
     const [value, setValue] = React.useState('1');
     const navigate = useNavigate();    
     const {user, logout} = React.useContext(UserContext)    
-    const [user_name,SetUsername] = React.useState('')
+    
 
     const [userProfile,setProfile] = React.useState({});
     const [posts,setPosts] = React.useState([]);
@@ -31,14 +34,16 @@ export default function profile({match}) {
     const [friends, setFriends] = React.useState([]);    
     const [imagepf, setImagepf] = React.useState('');
 
+    const [error, setError] = React.useState(false)
+    const [isLoading, setisLoading] = React.useState(true)
+
     const { username } = useParams()
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-                        
-    React.useEffect(() => {      
-        
+
+    const getProfile = () => { 
         let data = new FormData()
         
         if(user.user !== ''){                        
@@ -54,7 +59,7 @@ export default function profile({match}) {
                 setImagepf(response.data.profile.profile)
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err.response.data.message)
             })
         }else{
             axios.get( server.url + '/post/profile/' + username)
@@ -68,10 +73,16 @@ export default function profile({match}) {
             })
             .catch((err) => {
                 console.log(err)
+                setError(true)
             })
         }   
+    }
+                        
+    React.useEffect(() => {                      
         
-        
+        setTimeout(()=> {
+            getProfile()        
+        }, 300)
     },[])
 
     const movePage = (user_name) => {
@@ -138,8 +149,8 @@ export default function profile({match}) {
     }
 
   return (
-    <div>
-        {userProfile._id !== 'undefined' ?
+    <div>        
+        {userProfile._id !== undefined ?
             <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
                     <Avatar 
@@ -218,7 +229,18 @@ export default function profile({match}) {
                 </TabContext>
             </Box>
             </Box>
-            : ''
+            : 
+            
+            <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
+                { error ? 
+                    <Typography variant='h5' sx={{ mt: 10}}>User tidak ditemukan</Typography>
+                    :
+                    <Box sx={{ minWidth: '100%'}} display='flex' justifyContent='center' pt={15} >
+                        <Loader />
+                    </Box>
+                }
+            </Box>
+                
         }
     </div>
   )

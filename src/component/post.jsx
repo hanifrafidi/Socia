@@ -138,7 +138,7 @@ export default function post(props) {
             </Box>
         </Box>
         <Box sx={{ mb: {xs : 2, md: 3}}}>
-            <Typography variant='body1' color='text'>{props.caption}</Typography>
+            <Typography variant='h6' color='text'>{props.caption}</Typography>
         </Box>
         
     </Box>

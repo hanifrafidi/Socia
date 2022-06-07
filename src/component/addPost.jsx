@@ -19,6 +19,8 @@ import { Player } from "video-react";
 
 import { UserContext } from '../state/UserContext'
 
+import Loader from '../component/loader'
+
 export default function addPost() {
     const {user}  = React.useContext(UserContext)
 
@@ -173,15 +175,25 @@ export default function addPost() {
         <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/'>Delete</Button>
 
         <Modal
-        open={modal}
-        // onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-         >        
-            <Box sx={{ display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems:'center', minHeight: '100vh'}}>
-                <Typography variant='h6' sx={{ my: 3}}>Loading dulu ya...</Typography>
-                <Button variant='text' color="inherit" onClick={() => setModal(false)}> Close</Button>
-            </Box>
+          open={modal}          
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          >        
+              <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection:'column', 
+                  justifyContent: 'center', 
+                  alignItems:'center', 
+                  py: 15,
+                  minWidth: {xs: '70%', md :'20%'}, 
+                  borderRadius : 1,
+                  background:'#fff',                                    
+                  }}>
+                  <Box><Loader /></Box>
+                  <Typography variant='h6' color="text.secondary" sx={{ mt: 3}}>Loading dulu ya...</Typography>
+                  {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
+              </Box>
          </Modal>
     </Box>
   )

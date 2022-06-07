@@ -16,6 +16,8 @@ import {
   Alert
 } from '@mui/material'
 
+import Loader from '../component/loader'
+
 import { useNavigate, Link as Links} from "react-router-dom";
 
 import {UserContext} from '../state/UserContext'
@@ -42,10 +44,13 @@ export default function login() {
 
     axios.post( server.url + '/user/login', formData)
     .then((response) => {                                                                        
-        setModal(false)                 
+        
         console.log(response.data)
         // console.log(response.data.user.profile.image_path)
-        return login(response.data)
+        setTimeout(() => {
+          setModal(false)                 
+          login(response.data)
+        },800)        
     })
     .catch((error) => {
         console.log(error)
@@ -134,10 +139,21 @@ export default function login() {
           open={modal}          
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           >        
-              <Box sx={{ display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems:'center', minHeight: '100vh'}}>
-                  <Typography variant='h6' sx={{ my: 3}}>Loading dulu ya...</Typography>
-                  <Button variant='text' color="inherit" onClick={() => setModal(false)}> Close</Button>
+              <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection:'column', 
+                  justifyContent: 'center', 
+                  alignItems:'center', 
+                  py: 15,
+                  minWidth: {xs: '70%', md :'20%'}, 
+                  borderRadius : 1,
+                  background:'#fff',                                    
+                  }}>
+                  <Box><Loader /></Box>
+                  <Typography variant='h6' color="text.secondary" sx={{ mt: 3}}>Loading dulu ya...</Typography>
+                  {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
               </Box>
          </Modal>
     </Card>
