@@ -32,7 +32,7 @@ export default function timeline() {
     React.useEffect(() => {            
       getPost()  
       
-      if(user.user.id !== undefined){
+      if(user.user._id !== undefined){
         getFriends()
       }
       
