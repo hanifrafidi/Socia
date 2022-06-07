@@ -81,20 +81,22 @@ export default function comments(props) {
             <Typography variant='h6' component='div' color='text.secondary' sx={{ flexGrow: 1 }}>Comments</Typography>
             {/* <Typography variant='subtitle1' component='div'>Filter</Typography> */}
         </Box>
+        { user.user !== '' ?
         <Box 
             sx={{ mt: 5, display: 'flex', alignItems: 'center' }} 
             component='form' 
             enCtype='multipart/form-data'
             onSubmit={onSubmit}
         >
-            <Avatar 
-                alt={user.user.username}
-                src={user.user.profile.image_path} 
-                sx={{ mr: 2}}
-                component={Links}
-                to={'/'+ user.user.username}
-            />
-
+                        
+                <Avatar 
+                    alt={user.user.username}
+                    src={user.user.profile.image_path} 
+                    sx={{ mr: 2}}
+                    component={Links}
+                    to={'/'+ user.user.username}
+                />
+                
             <TextField 
                 sx={{ width: '100%', pr: 5 }} 
                 id="standard-basic" 
@@ -106,6 +108,9 @@ export default function comments(props) {
 
             <Button variant='contained' size='small' type='submit' color='primary' sx={{ px: 4, py: 1.5 }}>Submit</Button>
         </Box>
+            :
+            ''
+        }
         <Box>
             {                
                 commentList.length > 0 ?
