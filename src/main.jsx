@@ -14,9 +14,9 @@ let theme = responsiveFontSizes(Theme);
 ReactDOM.render(
   <ThemeProvider theme={theme}>  
     <CssBaseline />
-    <BrowserRouter>
+    <HashRouter>
       <App />
-    </BrowserRouter>  
+    </HashRouter>  
   </ThemeProvider>,
   document.getElementById('root')
 )
