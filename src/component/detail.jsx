@@ -91,8 +91,7 @@ export default function detail() {
     .then(response => {
       console.log(response.data)
       setPost(response.data.post)
-      setUserDetail(response.data.user)
-      setProfile(response.data.user.profile)
+      setUserDetail(response.data.user)      
       setLikeCount(response.data.post.like.length)
       setCommentCount(response.data.post.comment.length)  
       setLike(response.data.post.is_liked)
