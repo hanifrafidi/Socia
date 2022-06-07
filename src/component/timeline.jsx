@@ -80,7 +80,7 @@ export default function timeline() {
         console.log(response.data)   
       })
       .catch((error) => {
-        console.error(error.response.data.message);
+        console.error(error);
         setError(true)
         setisLoading(false)
       })      
@@ -96,7 +96,7 @@ export default function timeline() {
         setAddFriends(response.data.posts)
       })
       .catch((error) => {
-        console.error(error.response.data.message);
+        console.error(error);
         setError(true)
         setisLoading(false)
       }) 
@@ -212,7 +212,7 @@ export default function timeline() {
         }
         <Box>
             { error ? 
-                <Typography align='center' variant='h5' sx={{ mt: 10}}>Tidak dapat menampilkan timeline anda</Typography>
+                <Typography align='center' variant='h5' sx={{ mt: 10}}>Tidak dapat menampilkan timeline anda, silakan refresh kembali</Typography>
                 :
                 ''
             }
