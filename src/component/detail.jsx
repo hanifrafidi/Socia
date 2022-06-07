@@ -107,7 +107,7 @@ export default function detail() {
     
     setTimeout(()=> {
       getPost()    
-  }, 800)    
+  }, 300)    
   },[])
 
   const checkLike = () => {            

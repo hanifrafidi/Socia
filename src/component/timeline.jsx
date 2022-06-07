@@ -32,13 +32,14 @@ export default function timeline() {
     React.useEffect(() => {            
       getPost()  
       
-      getFriends()
+      if(user.user.id !== undefined){
+        getFriends()
+      }
       
     }, [])  
 
     React.useEffect(() => {
-      if(isFetching && next){
-        
+      if(isFetching && next){        
         setTimeout(() => {
           getPost()
         }, 800)
@@ -75,7 +76,7 @@ export default function timeline() {
         setTimeout(() => {
           setisLoading(false)
           setIsFetching(false)                    
-        }, 800)
+        }, 300)
         console.log(response.data)   
       })
       .catch((error) => {
@@ -102,7 +103,7 @@ export default function timeline() {
     }
    
   const handleScroll = () => {        
-    if (window.innerHeight + window.pageYOffset === document.body.offsetHeight && next){
+    if (window.innerHeight + window.pageYOffset === document.body.offsetHeight && next && user.user._id !== undefined){
       return setIsFetching(true)
     }                      
   }
@@ -204,7 +205,7 @@ export default function timeline() {
               </Box>
               :
               <Box mt={5} minWidth='100%' justifyContent='center' display='flex'>
-                  
+                 {console.log(error) }
               </Box>
             }            
             </div>         
