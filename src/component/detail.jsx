@@ -146,15 +146,20 @@ export default function detail() {
           <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
               <Box sx={{ flexGrow : 1}}>
                   <Box component = {Links} to={'/' + userDetail.username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
-                  <Avatar 
-                      alt={userDetail.username}
-                      src={profile.image_path}
-                      sx={{ 
-                          mr: {xs: 1, md: 2},
-                          width : { xs : 30, md: 40 },
-                          height : { xs : 30, md: 40 }
-                      }}
-                  />
+                  {
+                  user.user._id !== undefined ? 
+                    <Avatar 
+                        alt={userDetail.username}
+                        src={profile.image_path}
+                        sx={{ 
+                            mr: {xs: 1, md: 2},
+                            width : { xs : 30, md: 40 },
+                            height : { xs : 30, md: 40 }
+                        }}
+                    />
+                    :
+                    ''
+                  }
                   <Typography variant='body1' component="div" color="inherit" sx={{ mr: {xs: 2, md: 4} }}>
                           {userDetail.username}                          
                   </Typography>
