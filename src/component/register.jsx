@@ -84,9 +84,10 @@ export default function register() {
   }
 
   return (
+    <div>
     <Box 
       component='form' 
-      onSubmit = {onSubmit}
+      onSubmit = {(e) => onSubmit(e)}
       enctype='multipart/form-data'
       
       sx={{ 
@@ -147,7 +148,7 @@ export default function register() {
         <Box sx={{ mt: 5}}>
           <Typography variant="body1" color='inherit' sx={{ mt: 3, mb: 7}} > Upload Photo Profile </Typography>
           <label htmlFor="contained-button-file">
-            <Input id="contained-button-file" multiple type="file" accept="image/jpeg,image/png,image/jpg" onChange={uploadImage} required/>
+            <Input id="contained-button-file" multiple type="file" accept="image/jpeg,image/png,image/jpg" onChange={uploadImage} />
             <Card 
                 sx={{ 
                     height: 250, 
@@ -174,29 +175,30 @@ export default function register() {
         </Box>
 
         <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 15, mb: 3}}>Submit</Button>
-        <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/login'>Delete</Button>
-
-        <Modal
-          open={modal}          
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-          >        
-              <Box sx={{ 
-                  display: 'flex', 
-                  flexDirection:'column', 
-                  justifyContent: 'center', 
-                  alignItems:'center', 
-                  py: 15,
-                  minWidth: {xs: '70%', md :'20%'}, 
-                  borderRadius : 1,
-                  background:'#fff',                                    
-                  }}>
-                  <Box><Loader /></Box>
-                  <Typography variant='h6' color="text.secondary" sx={{ mt: 3}}>Loading dulu ya...</Typography>
-                  {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
-              </Box>
-         </Modal>
+        <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/login'>Delete</Button>        
     </Box>
+
+  <Modal
+  open={modal}          
+  aria-labelledby="modal-modal-title"
+  aria-describedby="modal-modal-description"
+  sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+  >        
+      <Box sx={{ 
+          display: 'flex', 
+          flexDirection:'column', 
+          justifyContent: 'center', 
+          alignItems:'center', 
+          py: 15,
+          minWidth: {xs: '70%', md :'20%'}, 
+          borderRadius : 1,
+          background:'#fff',                                    
+          }}>
+          <Box><Loader /></Box>
+          <Typography variant='h6' color="text.secondary" sx={{ mt: 3}}>Loading dulu ya...</Typography>
+          {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
+      </Box>
+    </Modal>
+  </div>
   )
 }
