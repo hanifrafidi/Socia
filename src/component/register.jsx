@@ -17,6 +17,7 @@ import {
 
 import TextField from '@mui/material/TextField'
 import Modal from '@mui/material/Modal'
+import Loader from '../component/loader'
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { styled } from '@mui/material/styles';
 
@@ -109,6 +110,7 @@ export default function register() {
             variant='outlined'
             size='medium'            
             onChange={(e) => setUsername(e.target.value)}
+            required
             fullWidth
            />          
         </Box>
@@ -121,6 +123,7 @@ export default function register() {
             type='text'
             variant='outlined'
             size='medium'
+            required
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
            />          
@@ -134,6 +137,7 @@ export default function register() {
             type={showPass}
             variant='outlined'
             size='medium'
+            required
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
            />          
@@ -143,7 +147,7 @@ export default function register() {
         <Box sx={{ mt: 5}}>
           <Typography variant="body1" color='inherit' sx={{ mt: 3, mb: 7}} > Upload Photo Profile </Typography>
           <label htmlFor="contained-button-file">
-            <Input id="contained-button-file" multiple type="file" accept="image/jpeg,image/png,image/jpg" onChange={uploadImage}/>
+            <Input id="contained-button-file" multiple type="file" accept="image/jpeg,image/png,image/jpg" onChange={uploadImage} required/>
             <Card 
                 sx={{ 
                     height: 250, 
@@ -176,10 +180,21 @@ export default function register() {
           open={modal}          
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           >        
-              <Box sx={{ display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems:'center', minHeight: '100vh'}}>
-                  <Typography variant='h6' sx={{ my: 3}}>Loading dulu ya...</Typography>
-                  <Button variant='text' color="inherit" onClick={() => setModal(false)}> Close</Button>
+              <Box sx={{ 
+                  display: 'flex', 
+                  flexDirection:'column', 
+                  justifyContent: 'center', 
+                  alignItems:'center', 
+                  py: 15,
+                  minWidth: {xs: '70%', md :'20%'}, 
+                  borderRadius : 1,
+                  background:'#fff',                                    
+                  }}>
+                  <Box><Loader /></Box>
+                  <Typography variant='h6' color="text.secondary" sx={{ mt: 3}}>Loading dulu ya...</Typography>
+                  {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
               </Box>
          </Modal>
     </Box>

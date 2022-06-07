@@ -36,7 +36,7 @@ export default function comments(props) {
             setCommentList([response.data.comment].concat(commentList));
         })
         .catch(error => {
-            console.log(error)            
+            console.log(error.response.data)            
         })
     }
 
@@ -76,26 +76,35 @@ export default function comments(props) {
 
         
   return (
-    <Box sx={{ mt: 2, mb: 5}}>        
+    <Box sx={{ mt: 5, mb: 5}}>        
         <Box sx={{ display: 'flex'}}>
-            <Typography variant='subtitle1' component='div' sx={{ flexGrow: 1 }}>Comments</Typography>
-            <Typography variant='subtitle1' component='div'>Filter</Typography>
+            <Typography variant='h6' component='div' color='text.secondary' sx={{ flexGrow: 1 }}>Comments</Typography>
+            {/* <Typography variant='subtitle1' component='div'>Filter</Typography> */}
         </Box>
         <Box 
-            sx={{ mt: 5, display: 'flex', justifyContent: 'space-between' }} 
+            sx={{ mt: 5, display: 'flex', alignItems: 'center' }} 
             component='form' 
             enCtype='multipart/form-data'
             onSubmit={onSubmit}
         >
+            <Avatar 
+                alt={user.user.username}
+                src={user.user.profile.image_path} 
+                sx={{ mr: 2}}
+                component={Links}
+                to={'/'+ user.user.username}
+            />
+
             <TextField 
                 sx={{ width: '100%', pr: 5 }} 
                 id="standard-basic" 
-                label="Write your comment here" 
+                label="Comment here" 
                 variant="standard" 
                 onChange={(e) => setNewComment(e.target.value)}  
+                required
             />            
 
-            <Button variant='contained' size='small' type='submit' color='primary' sx={{ px: 4 }}>Submit</Button>
+            <Button variant='contained' size='small' type='submit' color='primary' sx={{ px: 4, py: 1.5 }}>Submit</Button>
         </Box>
         <Box>
             {                
@@ -122,7 +131,10 @@ export default function comments(props) {
                             </div>                                                     
                             )
                     })                                        
-                : ''
+                : 
+                <Box mt={10} minWidth='100%' justifyContent='center' display='flex' color='text.secondary'>
+                    <Typography variant='body1' >Belum ada yang komentar nih, Yuk komentarin biar rame</Typography>
+                </Box>
             }           
         </Box>
     </Box>

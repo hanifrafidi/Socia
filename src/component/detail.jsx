@@ -20,12 +20,17 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { UserContext } from '../state/UserContext'
 import { server } from '../backend'
 
+import SkeletonPost from '../component/skeleton/post'
+
 export default function detail() {
+  const [post,setPost] = React.useState([])
+  const [comment,setComment] = React.useState([])
+
   const [open, setOpen] = React.useState(false);
   const [like,setLike] = React.useState(false)
-  const [likeCount,setLikeCount] = React.useState()
-  const [commentCount,setCommentCount] = React.useState()
-  const [post,setPost] = React.useState([])
+  const [likeCount,setLikeCount] = React.useState(0)
+  const [commentCount,setCommentCount] = React.useState(0)
+  
   const [userDetail,setUserDetail] = React.useState('')
   const [profile,setProfile] = React.useState('')
 
@@ -90,7 +95,8 @@ export default function detail() {
       setProfile(response.data.user.profile)
       setLikeCount(response.data.post.like.length)
       setCommentCount(response.data.post.comment.length)  
-      setLike(response.data.post.is_liked)    
+      setLike(response.data.post.is_liked)
+      setComment(response.data.post.comment)    
     })
     .catch((error) => {
       console.log(error.message)
@@ -98,8 +104,10 @@ export default function detail() {
   }
 
   React.useEffect(() => {    
-    getPost()    
-        
+    
+    setTimeout(()=> {
+      getPost()    
+  }, 800)    
   },[])
 
   const checkLike = () => {            
@@ -120,7 +128,9 @@ export default function detail() {
   return (        
     <div>      
       { post._id === undefined ? 
-        ' '
+      <Box>
+        <SkeletonPost />
+      </Box> 
         :         
       <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>        
           <Card sx={{ 
@@ -160,7 +170,7 @@ export default function detail() {
               </Box>
           </Box>
           <Box sx={{ mb: {xs : 2, md: 3}}}>
-              <Typography variant='body2' color='text'>{post.caption}</Typography>
+              <Typography variant='h6' color='text.primary'>{post.caption}</Typography>
           </Box>                    
           <Comments open={open} posts={post} comments={post.comment}></Comments>          
       </Box>
