@@ -22,7 +22,7 @@ import UserProvider from './state/UserContext'
 
 import axios from 'axios';
 
-import background from './background.png'
+import background from './background.jpg'
 
 function App() {  
   const location = useLocation();
@@ -42,7 +42,7 @@ function App() {
         <UserProvider>
             <Box
              sx={{ 
-                backgroundColor: '#E3E3E3', 
+                backgroundColor: '#F2F2F2', 
                 backgroundImage : 'url('+ bgr() +')',
                 backgroundRepeat: 'no-repeat',            
                 backgroundPosition: 'center center',            

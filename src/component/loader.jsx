@@ -3,10 +3,10 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function loader() {
+export default function loader(props) {
   return (
     <>
-        <CircularProgress />  
+        <CircularProgress value={props.progress} />  
     </>
   )
 }

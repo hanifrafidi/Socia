@@ -77,7 +77,7 @@ export default function timeline() {
           setisLoading(false)
           setIsFetching(false)                    
         }, 300)
-        console.log(response.data)   
+        // console.log(response.data)   
       })
       .catch((error) => {
         console.error(error);
@@ -92,7 +92,7 @@ export default function timeline() {
 
       axios.post(server.url + '/user/findFriend/' + user.user._id, formData)
       .then((response) => {                                                                  
-        console.log(response.data)           
+        // console.log(response.data)           
         setAddFriends(response.data.posts)
       })
       .catch((error) => {
@@ -205,7 +205,7 @@ export default function timeline() {
               </Box>
               :
               <Box mt={5} minWidth='100%' justifyContent='center' display='flex'>
-                 {console.log(error) }
+                 
               </Box>
             }            
             </div>         

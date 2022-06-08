@@ -36,7 +36,7 @@ export default function navbar() {
 
   return (
     <Box sx={{ display: () => navDisplay() }}>
-        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none', px: { xs: 0, md: 65.6} }}>                                                                                
+        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none', px: { xs: 0, xl: 65.6, md: 26} }}>                                                                                
             <Container maxWidth='md' sx={{ backgroundColor: 'white', py: 1, px: { xs: 0 } }}>
             <Toolbar >
                 <Typography 
@@ -44,7 +44,7 @@ export default function navbar() {
                     component={Links} 
                     color="primary"
                     to="/" 
-                    sx={{ flexGrow: 1, fontWeight: 'bold', textDecoration: 'none' }}>
+                    sx={{ flexGrow: 1, fontWeight: 'bolder', textDecoration: 'none' }}>
                     SOCIA
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center'}}>

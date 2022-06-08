@@ -27,6 +27,9 @@ export default function addPost() {
     const [preview, setPreview] = React.useState('')
     const [image, setImage] = React.useState([])
     const [caption, setCaption] = React.useState([])
+    const [progress, setProgress] = React.useState(0)
+
+    const [submit, setSubmit] = React.useState(false)
 
     const [modal, setModal] = React.useState(false)
 
@@ -34,7 +37,7 @@ export default function addPost() {
 
     const Input = styled('input')({
         display: 'none',
-    });
+    });   
     
     const uploadImage = (e) => {
         // console.log(e.target.files[0]);
@@ -59,22 +62,43 @@ export default function addPost() {
         const url = URL.createObjectURL(file);
         setPreview(url);
       };
+
+    React.useEffect(() => {
+        console.log(progress)
+    },[progress])
+
+    React.useEffect(() => {
+        console.log(submit)
+        if(submit){
+           onSubmit()           
+        }
+    },[submit])
     
-    const onSubmit = (event) => {
-        event.preventDefault();        
+    const onSubmit = () => {
+        // event.preventDefault();        
 
         setModal(true)
 
-        const hashtag = ['2','2','2']
-        const comment = [{ 'user_id' : '222', 'comment' : 'helo', 'date' : 222}]
-        const like = [{'user_id' : '222'}, {'user_id' : '222'}]
+        const options = {                
+            onUploadProgress: (progressEvent) => {
+              const { loaded, total } = progressEvent;
+              var progresss = Math.floor((loaded * 100) / total);
+              setProgress(progress)
+              const timer = setInterval(() => {
+                setProgress((prevProgress) => (progresss));
+              }, 800);
+              return () => {
+                clearInterval(timer);
+              };
+            },
+        };
 
         let formData = new FormData();
         formData.append('files', image);
         formData.append('caption', caption);
         formData.append('user_id', user.accessToken);                                  
 
-        axios.post( server.url +'/post/', formData)
+        axios.post( server.url +'/post/', formData, options)
         .then((response) => {                                                 
             console.log(response.data);    
             setModal(false)            
@@ -99,7 +123,7 @@ export default function addPost() {
     <Box
         component='form'
         autoComplete='off'
-        onSubmit={onSubmit}
+        // onSubmit={onSubmit}
         enctype='multipart/form-data'
         sx={{
             py: 5,
@@ -171,7 +195,7 @@ export default function addPost() {
             />    
         </Box> */}
         
-        <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 4, mb: 3, py: 1.5}}>Submit</Button>
+        <Button variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 4, mb: 3, py: 1.5}} onClick={() => setSubmit(!submit)}>Submit</Button>
         <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/'>Delete</Button>
 
         <Modal
@@ -190,7 +214,7 @@ export default function addPost() {
                   borderRadius : 1,
                   background:'#fff',                                    
                   }}>
-                  <Box><Loader /></Box>
+                  <Box><Loader progress={progress}/></Box>
                   <Typography variant='h6' color="text.secondary" sx={{ mt: 3}}>Loading dulu ya...</Typography>
                   {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
               </Box>

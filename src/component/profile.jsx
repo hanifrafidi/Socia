@@ -95,14 +95,14 @@ export default function profile({match}) {
 
     const movePage = (user_name) => {
         navigate('/' + user_name, { replace: true })
-        // location.reload();
+        location.reload();
         // return navigate("/" + user_name, { replace: true });
         // history.push('/dresses?color=blue')
         // SetUsername(user_name)
-        setIsLoading(true)        
-        setTimeout(()=> {
-            getProfile(user_name)        
-        }, 300)
+        // setIsLoading(true)        
+        // setTimeout(()=> {
+        //     getProfile(user_name)        
+        // }, 300)
     }
 
     const addFriend = () => {        
@@ -168,7 +168,7 @@ export default function profile({match}) {
         {
             
         !isLoading ?
-            <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
+            <Box sx={{ mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
                     <Avatar 
                             alt={userProfile.username}
@@ -193,14 +193,17 @@ export default function profile({match}) {
             </Box>
             <Box>
                 <TabContext value={value}>
-                    <Box sx={{ borderColor: 'divider', display: 'flex', justifyContent: 'center', mb: {xs: 1, md: 3}}}>
-                        <TabList onChange={handleChange} aria-label="lab API tabs example" sx={{ display: 'flex', justifyContent: 'center'}}>
-                            <Tab label="Posts" value="1" sx={{ mx: {xs: 0, md: 5}}}/>
-                            <Tab label="Friend" value="2" sx={{ mx: {xs: 0, md: 5}}}/>
+                    <Box sx={{ borderColor: 'divider', display: 'flex', justifyContent: 'center', }}>
+                        <TabList 
+                            onChange={handleChange} 
+                            aria-label="lab API tabs example" 
+                            sx={{ display: 'flex', justifyContent: 'center'}}>
+                            <Tab label={"Posts " + posts.length } value="1" sx={{ mx: {xs: 0, md: 5}}}/>
+                            <Tab label={"Friend " + friends.length} value="2" sx={{ mx: {xs: 0, md: 5}}}/>
                             <Tab label="Circle" value="3" sx={{ mx: {xs: 0, md: 5}}}/>
                         </TabList>
                     </Box>
-                    <TabPanel value="1" sx={{ px: 0 }}>
+                    <TabPanel value="1" sx={{ px: {xs: 1 , md: 3}, minHeight: '100vh' }}>
                         <Grid 
                             container
                             direction="row"
@@ -211,17 +214,26 @@ export default function profile({match}) {
                             {
                                 posts.map((post, index) => {
                                     return(
-                                        <Grid item xs={4} md={4} key={index} sx={{ maxHeight : 270, mb: {xs : 0.5, md: 1},  }} component={Links} to={'/detail/' + post._id}>
-                                            <Card 
-                                             sx={{ 
-                                                    p: 0,
-                                                    backgroundImage : 'url('+ post.image_path +')',
-                                                    backgroundRepeat: 'no-repeat',
-                                                    backgroundSize: 'cover',
-                                                    backgroundPosition: 'center center',
-                                                    minWidth: {xs: 70},
-                                                    minHeight: {xs: 120, md: 270}
-                                            }} />   
+                                        <Grid item xs={4} md={4} key={index} 
+                                        sx={{  p: 0, mb: { xs : 0}  }} 
+                                        component={Links} to={'/detail/' + post._id}>                                            
+                                            <Card
+                                                component="img"
+                                                sx={{
+                                                height: 240,   
+                                                minWidth: '100%',
+                                                maxHeight: {xs: 110, md: '100%'},
+                                                maxWidth: {xs: 70, md: '100%'},
+                                                p: 0,                                                
+                                                backgroundRepeat: 'no-repeat',
+                                                backgroundSize: 'cover',                                                
+                                                // maxHeight: { xs: 233, md: 167 },
+                                                // maxWidth: { xs: 350, md: 250 },
+                                                }}
+                                                alt={post.username}
+                                                src={post.image_path}
+                                                loading="lazy"
+                                            />   
                                         </Grid>
                                     )
                                 })

@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
+import Modal from '@mui/material/Modal';
 
 import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
@@ -30,9 +31,12 @@ export default function detail() {
   const [like,setLike] = React.useState(false)
   const [likeCount,setLikeCount] = React.useState(0)
   const [commentCount,setCommentCount] = React.useState(0)
+  const [isLoading,setIsLoading] = React.useState(true)
   
   const [userDetail,setUserDetail] = React.useState('')
   const [profile,setProfile] = React.useState('')
+
+  const [modal,setModal] = React.useState(false)
 
   const navigate = useNavigate();
 
@@ -96,18 +100,25 @@ export default function detail() {
       setLikeCount(response.data.post.like.length)
       setCommentCount(response.data.post.comment.length)  
       setLike(response.data.post.is_liked)
-      setComment(response.data.post.comment)    
+      setComment(response.data.post.comment)  
+      
+      setTimeout(() => {
+        setIsLoading(false)
+      },400)      
     })
     .catch((error) => {
       console.log(error.message)
+      
+      setTimeout(() => {
+        setIsLoading(false)
+      },200)
     })
   }
 
   React.useEffect(() => {    
+    getPost()
     
-    setTimeout(()=> {
-      getPost()    
-  }, 300)    
+    return (getPost())
   },[])
 
   const checkLike = () => {            
@@ -127,22 +138,29 @@ export default function detail() {
   
   return (        
     <div>      
-      { post._id === undefined ? 
+      { isLoading ? 
       <Box>
         <SkeletonPost />
       </Box> 
         :         
       <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>        
-          <Card sx={{ 
-              p: 0,
-              backgroundImage : 'url(' + post.image_path +')',
-              backgroundRepeat: 'no-repeat',            
-              backgroundPosition: 'center center',            
-              backgroundSize: 'cover',
-              minWidth: '100%',
-              minHeight: {xs: 250, md: 500}
-          }}>            
-          </Card>
+          <Card component='img'
+              sx={{ 
+                  p: 0,            
+                  backgroundRepeat: 'no-repeat',            
+                  backgroundPosition: 'center center',            
+                  backgroundSize: 'cover',
+                  minWidth: '100%',
+                  maxWidth: '100%',
+                  minHeight: {xs: '100%', md: '100%'},
+                  maxHeight: {xs: '100%', md: '100%'}
+              }}
+              alt={userDetail.username}
+              src={post.image_path}
+              loading="lazy"
+              onClick={() => setModal(!modal)}
+              >            
+            </Card>
           <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
               <Box sx={{ flexGrow : 1}}>
                   <Box component = {Links} to={'/' + userDetail.username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
@@ -173,6 +191,44 @@ export default function detail() {
               <Typography variant='h6' color='text.primary'>{post.caption}</Typography>
           </Box>                    
           <Comments open={open} posts={post} comments={post.comment}></Comments>          
+
+          <Modal
+          open={modal}          
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}          
+          onClick={() => setModal(!modal)}
+          >        
+              <Box 
+              sx={{ 
+                  display: 'flex', 
+                  flexDirection:'column', 
+                  justifyContent: 'center', 
+                  alignItems:'center', 
+                  py: 15,
+                  minWidth: '100%',
+                  minHeight: '100%',
+                  borderRadius : 1,                  
+                  }}>
+                  <Card component='img'
+                      sx={{ 
+                          p: 0,            
+                          backgroundRepeat: 'no-repeat',            
+                          backgroundPosition: 'center center',            
+                          backgroundSize: 'cover',
+                          minWidth: {xs: '90%', xl:'50%'},
+                          maxWidth: {xs: '90%', xl:'50%'},
+                          minHeight: {xs: '100%', md: '100%'},
+                          maxHeight: {xs: '100%', md: '70%'}
+                      }}
+                      alt={userDetail.username}
+                      src={post.image_path}
+                      loading="lazy"                      
+                      >            
+                    </Card>                                   
+                  {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
+              </Box>
+         </Modal>
       </Box>
     }
     </div>
