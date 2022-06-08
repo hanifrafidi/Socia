@@ -121,11 +121,11 @@ export default function post(props) {
             p: 0,            
             backgroundRepeat: 'no-repeat',            
             backgroundPosition: 'center center',            
-            backgroundSize: 'cover',
+            objectFit: 'cover',
             minWidth: '100%',
             maxWidth: '100%',
-            minHeight: {xs: '100%', md: '100%'},
-            maxHeight: {xs: '100%', md: '100%'}
+            minHeight: {xs: '100vw', md: '100%'},
+            maxHeight: {xs: '100vw', md: '100%'}
         }}
         alt={props.user[0].username}
         src={props.img}

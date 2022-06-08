@@ -152,8 +152,8 @@ export default function detail() {
                   backgroundSize: 'cover',
                   minWidth: '100%',
                   maxWidth: '100%',
-                  minHeight: {xs: '100%', md: '100%'},
-                  maxHeight: {xs: '100%', md: '100%'}
+                  minHeight: {xs: '100vw', md: '100%'},
+                  maxHeight: {xs: '100vw', md: '100%'}
               }}
               alt={userDetail.username}
               src={post.image_path}
