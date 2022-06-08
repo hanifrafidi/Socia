@@ -1,23 +1,13 @@
 import React, { useState, createContext } from 'react';
 import { useNavigate } from "react-router-dom"
 
-export const UserContext = createContext({
-    user : {
-        user : '',
-        accessToken: '',
-        photo: '',
-    },    
-    login : () => {},
-    logout : () => {},
-})
+export const UserContext = createContext({})
 
 const UserProvider = (props) => {
     const [user, setUser] = useState({
         user : localStorage.getItem("user") != null ? JSON.parse(localStorage.getItem("user")) : '',
         accessToken : localStorage.getItem("token") != null ? localStorage.getItem("token") : '',
-        photo : localStorage.getItem("photo") != null ? localStorage.getItem("photo") : ''
-        // user : '',
-        // accessToken : ''
+        photo : localStorage.getItem("photo") != null ? localStorage.getItem("photo") : ''        
     })    
     const navigate = useNavigate()
 
