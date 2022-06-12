@@ -66,14 +66,25 @@ export default function test() {
       })
     }
 
+    const userMod = () => {
+      axios.get(server.url + '/user/moduser')
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error.error);
+      })
+    }
+
     React.useEffect(() => {      
     },[])
 
   return (
     <Box>
-      <Button size="large" variant="outlined" onClick={checkFriend} >Check Friend</Button>
+      {/* <Button size="large" variant="outlined" onClick={checkFriend} >Check Friend</Button>
+      <Button size="large" variant="outlined" color="primary" onClick={timelineTest} >Check Timeline</Button> */}
 
-      <Button size="large" variant="outlined" color="primary" onClick={timelineTest} >Check Timeline</Button>
+<Button size="large" variant="outlined" onClick={userMod} >User Mod</Button>
     </Box>
     
     // simple form

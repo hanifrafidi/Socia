@@ -87,10 +87,10 @@ export default function login() {
           px: { xs : 3, md: 10 },
           py : { xs : 5, md: 8 },
           mx: { xs : 2, md: 20 },
-          my: { xs : 0, md: 10 },
+          my: { xs : 1, md: 10 },
           
           flexDirection: 'column',
-          minHeight: '100%',
+          // minHeight: '100%',
           backgroundColor: '#fff',          
         }}>
 
@@ -132,8 +132,8 @@ export default function login() {
           ''
         }
         
-        <Button type='submit' variant='contained' size='large' fullWidth={true} sx={{ mt: 5, mb: 3, backgroundColor: '#eb5757'}}>Login</Button>
-        <Button variant='text' color='inherit' component={Links} to='/register'> Register </Button>
+        <Button type='submit' variant='contained' size='medium' fullWidth={true} sx={{ mt: 5, mb: 2, backgroundColor: '#eb5757'}}>Login</Button>
+        <Button variant='text' color='inherit' size='medium' component={Links} to='/register'> Register </Button>
 
         <Modal
           open={modal}          

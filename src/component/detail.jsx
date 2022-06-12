@@ -2,6 +2,7 @@ import React from 'react'
 import {useNavigate, useParams, Link as Links} from 'react-router-dom'
 import axios from 'axios'
 
+import Post from '../component/post'
 import Comments from './comments'
 
 import Box from '@mui/material/Box';
@@ -33,8 +34,7 @@ export default function detail() {
   const [commentCount,setCommentCount] = React.useState(0)
   const [isLoading,setIsLoading] = React.useState(true)
   
-  const [userDetail,setUserDetail] = React.useState('')
-  const [profile,setProfile] = React.useState('')
+  const [userDetail,setUserDetail] = React.useState('')  
 
   const [modal,setModal] = React.useState(false)
 
@@ -95,8 +95,7 @@ export default function detail() {
     .then(response => {
       console.log(response.data)
       setPost(response.data.post)
-      setUserDetail(response.data.user)
-      setProfile(response.data.user.profile)
+      setUserDetail(response.data.user)      
       setLikeCount(response.data.post.like.length)
       setCommentCount(response.data.post.comment.length)  
       setLike(response.data.post.is_liked)
@@ -143,54 +142,11 @@ export default function detail() {
         <SkeletonPost />
       </Box> 
         :         
-      <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>        
-          <Card component='img'
-              sx={{ 
-                  p: 0,            
-                  backgroundRepeat: 'no-repeat',            
-                  backgroundPosition: 'center center',            
-                  backgroundSize: 'cover',
-                  minWidth: '100%',
-                  maxWidth: '100%',
-                  minHeight: {xs: '100vw', md: '100%'},
-                  maxHeight: {xs: '100vw', md: '100%'}
-              }}
-              alt={userDetail.username}
-              src={post.image_path}
-              loading="lazy"
-              onClick={() => setModal(!modal)}
-              >            
-            </Card>
-          <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
-              <Box sx={{ flexGrow : 1}}>
-                  <Box component = {Links} to={'/' + userDetail.username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
-                  <Avatar 
-                      alt={userDetail.username}
-                      src={profile.image_path}
-                      sx={{ 
-                          mr: {xs: 1, md: 2},
-                          width : { xs : 30, md: 40 },
-                          height : { xs : 30, md: 40 }
-                      }}
-                  />
-                  <Typography variant='body1' component="div" color="inherit" sx={{ mr: {xs: 2, md: 4} }}>
-                          {userDetail.username}                          
-                  </Typography>
-                  </Box>
-              </Box>
-              <Box sx={{display: 'flex', alignItems: 'center'}}>
-                  <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}> {likeCount} </Typography>
-                  {checkLike(post.is_liked)}
-                  <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}>{commentCount} </Typography>
-                  <IconButton aria-label="chat" onClick={() => handleClick()}>
-                      <ChatBubbleOutlineIcon />
-                  </IconButton>
-              </Box>
+      <Box sx={{ backgroundColor: '#fff' }}>                  
+          <Post user={userDetail} data= {post} />                                                            
+          <Box sx={{ px: {xs: 2, md: 5}, pb: 2 }}>
+            <Comments open={open} posts={post} comments={post.comment}></Comments>          
           </Box>
-          <Box sx={{ mb: {xs : 2, md: 3}}}>
-              <Typography variant='h6' color='text.primary'>{post.caption}</Typography>
-          </Box>                    
-          <Comments open={open} posts={post} comments={post.comment}></Comments>          
 
           <Modal
           open={modal}          
@@ -222,7 +178,7 @@ export default function detail() {
                           maxHeight: {xs: '100%', md: '70%'}
                       }}
                       alt={userDetail.username}
-                      src={post.image_path}
+                      src={post.media_path}
                       loading="lazy"                      
                       >            
                     </Card>                                   

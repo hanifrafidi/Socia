@@ -91,7 +91,7 @@ export default function comments(props) {
                         
                 <Avatar 
                     alt={user.user.username}
-                    src={user.user.profile.image_path} 
+                    src={user.user.image_url} 
                     sx={{ mr: 2}}
                     component={Links}
                     to={'/'+ user.user.username}
@@ -119,18 +119,18 @@ export default function comments(props) {
                         return (                            
                             <div  key={index}>
                                 <Box sx={{ mt: 8}}>                                            
-                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                                         <Avatar 
                                             alt={comment.userDetail.username}
-                                            src={comment.userDetail.profile.image_path} 
+                                            src={comment.userDetail.image_url} 
                                             sx={{ mr: 2}}
                                             component={Links}
                                             to={'/'+ comment.userDetail.username}
                                         />
-                                        <Typography variant='subtitle1' component='div' sx={{ flexGrow: 1 }}>{comment.userDetail.username}</Typography>
-                                        <Typography variant='subtitle1' component='div'>{changeDate(comment.date)}</Typography>
+                                        <Typography variant='subtitle1' sx={{ mr: 1, fontWeight: 'bold' }}>{comment.userDetail.username}</Typography>
+                                        <Typography variant='subtitle2' color='text.secondary' >{changeDate(comment.date)}</Typography>
                                     </Box>
-                                    <Typography variant='subtitle2' component='div' sx={{ ml: 7}} >{comment.comment}</Typography>                                    
+                                    <Typography variant='subtitle2' color='text.primary' component='div' sx={{ ml: 7}} >{comment.comment}</Typography>                                    
                                 </Box>                      
                                 <Divider sx={{ mt: 5}}/>
                             </div>                                                     

@@ -27,6 +27,7 @@ export default function post(props) {
   const [like,setLike] = React.useState(false)
   const [likeCount,setLikeCount] = React.useState(props.data.like.length)
   const [commentCount,setCommentCount] = React.useState(props.data.comment.length)
+  const [imageDetail, setImageDetail] = React.useState(props.data.media_details !== undefined ? props.data.media_details : '')   
   const navigate = useNavigate();
 
   const {user} = React.useContext(UserContext)
@@ -43,7 +44,7 @@ export default function post(props) {
     let formData = new FormData();
     formData.append('user_id', user.user._id);    
         
-    axios.post(server.url + '/post/like/' + props.id, formData)
+    axios.post(server.url + '/post/like/' + props.data._id, formData)
     .then((response) => {
         console.log(response.data)
         setLike(true)
@@ -62,7 +63,7 @@ export default function post(props) {
     let formData = new FormData();
     formData.append('user_id', user.user._id);    
         
-    axios.post(server.url + '/post/unlike/' + props.id, formData)
+    axios.post(server.url + '/post/unlike/' + props.data._id, formData)
     .then((response) => {
         console.log(response.data)
         setLike(false)
@@ -74,10 +75,9 @@ export default function post(props) {
   }
 
   React.useEffect(() => {    
-    if(props.like !== undefined) {
-        setLike( props.like )
-    }
-    PostImageWidth()
+    if(props.data.is_like) {
+        setLike( props.data.is_like )
+    }    
   },[])
 
   const checkLike = () => {            
@@ -103,19 +103,19 @@ export default function post(props) {
     return moment(Date.parse(date)).fromNow();
   }
 
-  const PostImageWidth = () => {      
-      if(props.data.image_detail !== undefined) {
-        console.log(props.data.image_detail)
-        var width = props.data.image_detail.width;
-        var height = props.data.image_detail.height;
-        var portrait = height > width
-
-        console.log(portrait)
-      }
-  }
+//   const PostImageWidth = () => {      
+//       if(props.data.image_detail !== undefined) {
+//         console.log(imageDetail.resource_type)        
+//       }
+//   }
   
   return (
     <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
+        { imageDetail.resource_type === 'video' ?
+        <Box component='video' width="100%" height="540" controls>
+            <source src={props.data.media_path} type="video/mp4" />
+        </Box>   
+        :    
         <Card component='img'
         sx={{ 
             p: 0,            
@@ -124,21 +124,23 @@ export default function post(props) {
             objectFit: 'cover',
             minWidth: '100%',
             maxWidth: '100%',
-            minHeight: {xs: '100vw', md: '100%'},
-            maxHeight: {xs: '100vw', md: '100%'}
+            height: {xs: '80vw', md: '30vw'},
+            minHeight: {xs: '80vw', md: '30vw'},
+            maxHeight: {xs: '80vw', md: '30vw'}
         }}
-        alt={props.user[0].username}
-        src={props.img}
-        loading="lazy"
+        alt={props.user.username}
+        src={props.data.media_path}
+        // loading="lazy"
         onClick={detailPage}
         >            
         </Card>
+        }
         <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
             <Box sx={{ flexGrow : 1}}>
-                <Box component = {Links} to={'/' + props.user[0].username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
+                <Box component = {Links} to={'/' + props.user.username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
                 <Avatar 
-                    alt={props.user[0].username}
-                    src={props.user[0].profile.image_path}
+                    alt={props.user.username}
+                    src={props.user.image_url}
                     sx={{ 
                         mr: {xs: 1, md: 2},
                         width : { xs : 30, md: 40 },
@@ -147,13 +149,13 @@ export default function post(props) {
                 />
                 <Stack  sx={{ mr: {xs: 2, md: 4} }}>
                     <Typography variant='body1' component="div" color="inherit">
-                            {props.user[0].username}
+                            {props.user.username}
                     </Typography>
                     <Typography variant='caption' component="div" color="text.secondary">
-                            {changeDate(props.data.date)}
+                            {changeDate(props.data.date.created_at)}
                     </Typography>
                 </Stack>
-                </Box>
+                </Box>                
             </Box>
             <Box sx={{display: 'flex', alignItems: 'center'}}>
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}> {likeCount} </Typography>
@@ -165,7 +167,7 @@ export default function post(props) {
             </Box>
         </Box>
         <Box sx={{ mb: {xs : 2, md: 3}}}>
-            <Typography variant='h6' color='text'>{props.caption}</Typography>
+            <Typography variant='h6' color='text'>{props.data.caption}</Typography>
         </Box>
         
     </Box>
