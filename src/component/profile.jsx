@@ -32,8 +32,7 @@ export default function profile({match}) {
     const [userProfile,setProfile] = React.useState({});
     const [posts,setPosts] = React.useState([]);
     const [friendStatus, setFriendStatus] = React.useState('');
-    const [friends, setFriends] = React.useState([]);    
-    const [imagepf, setImagepf] = React.useState('');
+    const [friends, setFriends] = React.useState([]);        
 
     const [error, setError] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(true)
@@ -56,8 +55,7 @@ export default function profile({match}) {
                 setPosts(response.data.post)            
                 setProfile(response.data.profile)
                 setFriends(response.data.profile.friend_profile)
-                setFriendStatus(response.data.friend_status)            
-                setImagepf(response.data.profile.profile)
+                setFriendStatus(response.data.friend_status)                            
 
                 setTimeout(()=> {
                     setIsLoading(false)
@@ -73,8 +71,7 @@ export default function profile({match}) {
                 setPosts(response.data.post)            
                 setProfile(response.data.profile)
                 setFriends(response.data.profile.friend_profile)            
-                setFriendStatus(response.data.friend_status)
-                setImagepf(response.data.profile.profile)
+                setFriendStatus(response.data.friend_status)                
 
                 setTimeout(()=> {
                     setIsLoading(false)
@@ -95,14 +92,7 @@ export default function profile({match}) {
 
     const movePage = (user_name) => {
         navigate('/' + user_name, { replace: true })
-        location.reload();
-        // return navigate("/" + user_name, { replace: true });
-        // history.push('/dresses?color=blue')
-        // SetUsername(user_name)
-        // setIsLoading(true)        
-        // setTimeout(()=> {
-        //     getProfile(user_name)        
-        // }, 300)
+        location.reload();        
     }
 
     const addFriend = () => {        
@@ -172,8 +162,9 @@ export default function profile({match}) {
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
                     <Avatar 
                             alt={userProfile.username}
-                            src={imagepf.image_path}
-                            sx={{ mb: 3, height: {xs: 120, md: 170}, width: {xs: 120, md: 170} }}
+                            src={userProfile.image_url}
+                            sx={{ mb: 3, height: {xs: 120, md: 170}, width: {xs: 120, md: 170}, border: '0.5px solid #F2F2F2' }}
+
                     />
                     <Typography variant="h4" component="div" sx={{ mb: 1}}>{userProfile.username}</Typography>
                     {/* <Typography variant="body1" component="div">Tokyo</Typography>                 */}
@@ -222,16 +213,16 @@ export default function profile({match}) {
                                                 sx={{
                                                 height: 240,   
                                                 minWidth: '100%',
-                                                maxHeight: {xs: 110, md: '100%'},
+                                                maxHeight: {xs: 125, md: '100%'},
                                                 maxWidth: {xs: 70, md: '100%'},
                                                 p: 0,                                                
                                                 backgroundRepeat: 'no-repeat',
-                                                backgroundSize: 'cover',                                                
+                                                objectFit: 'cover',                                                
                                                 // maxHeight: { xs: 233, md: 167 },
                                                 // maxWidth: { xs: 350, md: 250 },
                                                 }}
                                                 alt={post.username}
-                                                src={post.image_path}
+                                                src={post.media_path}
                                                 loading="lazy"
                                             />   
                                         </Grid>
@@ -246,8 +237,8 @@ export default function profile({match}) {
                                 friends.map((friend, index) => {
                                     return(
                                         <Box sx={{display: 'flex', alignItems:'center', mb: 5,  textDecoration: 'none', color: 'black'}} key={index} onClick={() => movePage(friend.username)}>
-                                            <Avatar alt={friend.username} src={friend.profile.image_path} sx={{ mr: 3}} />
-                                            <Typography variant='h6'>{friend.username}</Typography>                                    
+                                            <Avatar alt={friend.username} src={friend.image_url} sx={{ mr: 3, border: '0.5px solid #F2F2F2'}} />
+                                            <Typography variant='body1'>{friend.username}</Typography>                                    
                                         </Box>
                                     )
 

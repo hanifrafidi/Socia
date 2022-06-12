@@ -30,7 +30,9 @@ export default function register() {
   const [username, setUsername] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
-
+  // const [firstName, setFirstName] = React.useState('')
+  // const [LastName, setLastName] = React.useState('')
+  // const [location, setLocation] = React.useState('')
   
   const [modal, setModal] = React.useState(false)
 
@@ -70,6 +72,10 @@ export default function register() {
       formData.append('username', username);      
       formData.append('email', email);      
       formData.append('password', password);      
+      // formData.append('firstname', firstname);   
+      // formData.append('lastname', lastname);            
+      // formData.append('location', location);   
+
 
       axios.post( server.url + '/user/', formData)
       .then((response) => {                                                                        
@@ -95,59 +101,100 @@ export default function register() {
         px: { xs : 3, md: 10 },
         py : { xs : 5, md: 8 },
         mx: { xs : 2, md: 20 },
-        my: { xs : 0, md: 10 },
+        my: { xs : 1, md: 10 },
         display: 'flex', 
         flexDirection: 'column', 
         backgroundColor: '#fff' }}
     >      
 
-        <Typography variant="h6" color='inherit' >Create your Account</Typography>        
+        <Typography variant="h4" color='primary' textAlign='center' fontWeight='bold' >Create your Account</Typography>        
 
         <Box sx={{ mt: 5}}>
-          <Typography variant="body1" color='inherit' sx={{ my: 3}} > Username </Typography>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}} > Username </Typography>
           <TextField
             id='username'
             name='username'
             type='text'
             variant='outlined'
-            size='medium'            
+            size='small'            
             onChange={(e) => setUsername(e.target.value)}
             required
             fullWidth
            />          
         </Box>
 
-        <Box sx={{ mt: 5}}>
-          <Typography variant="body1" color='inherit' sx={{ my: 3}} > Email </Typography>
+        <Box sx={{ mt: 2}}>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}} > Email </Typography>
           <TextField
             id='email'
             name='email'
             type='text'
             variant='outlined'
-            size='medium'
+            size='small'
             required
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
            />          
         </Box>
 
-        <Box sx={{ mt: 5}}>
-          <Typography variant="body1" color='inherit' sx={{ my: 3}} > Password </Typography>
+        <Box sx={{ mt: 2}}>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}} > Password </Typography>
           <TextField
             id='password'
             name='password'
             type={showPass}
             variant='outlined'
-            size='medium'
+            size='small'
             required
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
            />          
-           <Typography variant='body1' color='text' sx={{ mt: 3, textAlign: 'end', cursor: 'pointer' }} onClick={() => showPassword()}> Show Password</Typography>
+           <Typography variant='body2' color='text' sx={{ mt: 3, textAlign: 'end', cursor: 'pointer' }} onClick={() => showPassword()}> Show Password</Typography>
+        </Box>
+
+        {/* <Box sx={{ mt: 5}}>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}} > Firstname </Typography>
+          <TextField
+            id='firstname'
+            name='firstname'
+            type='text'
+            variant='outlined'
+            size='medium'            
+            onChange={(e) => setFirstName(e.target.value)}
+            required
+            fullWidth
+           />          
         </Box>
 
         <Box sx={{ mt: 5}}>
-          <Typography variant="body1" color='inherit' sx={{ mt: 3, mb: 7}} > Upload Photo Profile </Typography>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}} > Lastname </Typography>
+          <TextField
+            id='lastname'
+            name='lastname'
+            type='text'
+            variant='outlined'
+            size='medium'            
+            onChange={(e) => setLastName(e.target.value)}
+            required
+            fullWidth
+           />          
+        </Box>
+
+        <Box sx={{ mt: 5}}>
+          <Typography variant="body2" color='inherit' sx={{ my: 2}} > Firstname </Typography>
+          <TextField
+            id='location'
+            name='location'
+            type='text'
+            variant='outlined'
+            size='medium'            
+            onChange={(e) => setLocation(e.target.value)}            
+            fullWidth
+           />          
+        </Box> */}
+
+        <Box sx={{ mt: 2}}>
+          <Typography variant="body2" color='inherit' sx={{ mt: 3, mb: 7}} > Upload Photo Profile </Typography>
           <label htmlFor="contained-button-file">
             <Input id="contained-button-file" multiple type="file" accept="image/jpeg,image/png,image/jpg" onChange={uploadImage} />
             <Card 
@@ -175,8 +222,8 @@ export default function register() {
             </label> 
         </Box>
 
-        <Button type='submit' variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 15, mb: 3}}>Submit</Button>
-        <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/login'>Delete</Button>        
+        <Button type='submit' variant='contained' size='medium' color='success' fullWidth={true} sx={{ mt: 8, mb: 3}}>Submit</Button>
+        <Button variant='text' color='error' size='medium' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/login'>Delete</Button>        
     </Box>
 
   <Modal

@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 import { Link as Links } from 'react-router-dom'
-import SkeletonPost from '../component/skeleton/post'
-import Loader from '../component/loader'
+import { server } from '../backend'
+import { UserContext } from '../state/UserContext'
 
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
@@ -11,11 +11,15 @@ import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 
 import Post from './post'
-import { server } from '../backend'
-import { UserContext } from '../state/UserContext'
+import AddFriends from './addFriends'
+import SkeletonPost from '../component/skeleton/post'
+import Loader from '../component/loader'
 
 export default function timeline() {
     const {user} = React.useContext(UserContext)
+
+    const [timeline, setTimeline] = React.useState([])
+    const [timelineList, setTimelineList] = React.useState(0)
 
     const [datas,setDatas] = React.useState([])
     const [addFriends, setAddFriends] = React.useState([])    
@@ -30,18 +34,17 @@ export default function timeline() {
     const body = React.useRef()    
 
     React.useEffect(() => {            
-      getPost()  
-      
+      getPost()                    
       if(user.user._id !== undefined){
         getFriends()
-      }
-      
+      }            
     }, [])  
 
     React.useEffect(() => {
       if(isFetching && next){        
         setTimeout(() => {
           getPost()
+          getFriends()
         }, 800)
       }
     },[isFetching])
@@ -52,6 +55,49 @@ export default function timeline() {
           window.removeEventListener('scroll', handleScroll);
       };            
     }, [])  
+
+    React.useEffect(() => { 
+      var renderp = renderPost()      
+      setTimeline([...timeline, ...renderp])                                            
+    },[datas])
+
+    React.useEffect(()=>{
+      if(addFriends.length > 0 && datas.length > 0){
+        var renderp = renderFriends()      
+        setTimeline([...timeline, ...renderp])                                            
+      }          
+    },[addFriends])
+        
+
+    const renderPost = () => {        
+      var list = []
+      for( var i = 0; i < datas.length; i++ ) {
+        list.push(<div key={datas[i]._id}> <Post user={datas[i].user_detail[0]} data= {datas[i]} /> </div>)        
+      } 
+      
+      return list;              
+    }
+
+    const renderFriends = () => {        
+      var list = []      
+      var cek = (
+        <div key={timeline.length + 1}>
+          <Box p={3} backgroundColor='white' mt={1} >
+            <Typography variant='h6' color='primary' align='center' >Add New Friend</Typography>          
+          </Box>
+            {
+              addFriends.map((friends) => {             
+                return(
+                  <AddFriends key={friends.user_profile.username} friends={friends} />
+                )   
+              })      
+            }
+        </div>
+      )
+      list.push(cek)
+      
+      return list;              
+    }
 
     const getPost = () => {      
       var userId = ''
@@ -66,18 +112,19 @@ export default function timeline() {
 
       axios.post(server.url + '/post/timeline', formData)
       .then((response) => {                                      
+        console.log(response.data)
         if(response.data.posts.length === 0) {
           setNext(false)                                                              
         }else{
-          setDatas([...datas, ...response.data.posts])
-          setPage(page + 1)
+          setDatas(response.data.posts)
+          setPage(page + 1)                  
         } 
         
         setTimeout(() => {
           setisLoading(false)
           setIsFetching(false)                    
         }, 300)
-        // console.log(response.data)   
+        // console.log(response.data)          
       })
       .catch((error) => {
         console.error(error);
@@ -89,10 +136,11 @@ export default function timeline() {
     const getFriends = () => {
       var formData = new FormData()      
       formData.append('user_id', user.user._id);
+      formData.append('page', page);
 
       axios.post(server.url + '/user/findFriend/' + user.user._id, formData)
       .then((response) => {                                                                  
-        // console.log(response.data)           
+        console.log(response.data)           
         setAddFriends(response.data.posts)
       })
       .catch((error) => {
@@ -102,21 +150,12 @@ export default function timeline() {
       }) 
     }
    
-  const handleScroll = () => {        
-    if (window.innerHeight + window.pageYOffset === document.body.offsetHeight && next && user.user._id !== undefined){
-      return setIsFetching(true)
-    }                      
-  }
+    const handleScroll = () => {        
+      if (window.innerHeight + window.pageYOffset === document.body.offsetHeight && next && user.user._id !== undefined){
+        return setIsFetching(true)
+      }                      
+    }
 
-  const Loading = () => {    
-    return (
-      <Box minWidth='100%'>
-          <SkeletonPost style={{marginBottom: 12}} />
-          <SkeletonPost style={{marginBottom: 2}}/>
-          <SkeletonPost style={{marginBottom: 2}}/>
-      </Box>
-    )
-  }
 
   return (
     <div ref={body}>      
@@ -128,76 +167,13 @@ export default function timeline() {
                 <SkeletonPost />
             </Box>
           : 
-            <div>
-            {
-              datas.map((data,index) => {
-              return(
-                  <Box key={index}>
-                      <Post 
-                        id={data._id} 
-                        img={data.image_path} 
-                        caption={data.caption} 
-                        user={data.user_detail} 
-                        like={data.is_liked}
-                        data= {data}
-                      >
-                      </Post>                    
-                  </Box>
-              )
-              })              
-            }
-            {
-              addFriends.length !== 0 ?
-              <Box p={3} backgroundColor='white' mt={1}>
-                <Typography variant='h6' color='primary' align='center' >Add New Friend</Typography>
-              </Box>
-              :
-              ''
-            }
-            {
-              addFriends.map((friends,index) => {
-                return (
-                  <Stack key={index} mt={3}
-                    sx={{ 
-                      px: {xs: 2, md: 5}, 
-                      pt: {xs: 2, md: 5}, 
-                      pb: 2, 
-                      my: 1, 
-                      backgroundColor: '#fff', 
-                      borderRadius: 1.5 
-                    }}>
-                    <Stack direction="row" spacing={2}>
-                      <Avatar component={Links} to={'/' + friends.user_profile.username}
-                        alt={friends.user_profile.username}
-                        src={friends.user_profile.profile.image_path}
-                        sx={{ 
-                            mr: {xs: 1, md: 2},
-                            width : { xs : 30, md: 40 },
-                            height : { xs : 30, md: 40 }
-                        }}
-                      />
-                      <Typography variant='body1' component="div" color="inherit" >{friends.user_profile.username}</Typography>
-                    </Stack>
-                    <Grid container sx={{ display: 'flex',}} mt={2}>
-                      {
-                        friends.post.map((post,index) => {
-                          return(                          
-                              <Grid item xs={4} md={4} key={index} sx={{
-                                minHeight : 120,
-                                minWidth : 'auto',
-                                backgroundImage : 'url('+ post.image_path +')',
-                                backgroundRepeat: 'no-repeat',            
-                                backgroundPosition: 'center center', 
-                                backgroundSize: 'cover',
-                              }}></Grid>                          
-                          )
-                        })                      
-                      }
-                    </Grid>
-                  </Stack>
-                )
-              })
-            }                    
+            <div>       
+              {console.log(timeline)}       
+            <Box>
+              {                
+                timeline
+              }
+            </Box>                                    
             {
               isFetching && next ? 
               <Box mt={5} minWidth='100%' justifyContent='center' display='flex'>

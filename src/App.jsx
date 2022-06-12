@@ -42,15 +42,21 @@ function App() {
         <UserProvider>
             <Box
              sx={{ 
-                backgroundColor: '#F2F2F2', 
+                backgroundColor: '#f0f5f5', 
                 backgroundImage : 'url('+ bgr() +')',
                 backgroundRepeat: 'no-repeat',            
                 backgroundPosition: 'center center',            
                 backgroundSize: 'cover',
                 p: 0, 
-                minHeight: '100vh'
+                minHeight: {xs: '100%', md:'100vh'},                
              }}>
-              <Container maxWidth='md' sx={{ pt: {xs: 9, md : 10}, pb: 5, minHeight: '100vh', px: 0 }}>
+              <Container maxWidth='md' 
+               sx={{ 
+                pt: {xs: 8, md : 10}, 
+                pb: 5,                 
+                px: 0, 
+                minHeight: {xs: '100vh', md : '100vh'},                
+                 }}>
                 <Navbar></Navbar>
                 <Routes>
                   <Route path='/' element={<Timeline />}></Route>
@@ -58,7 +64,7 @@ function App() {
                   <Route path='/Profile' element={<Profile />}></Route>
                   <Route path='/profile/:username' element={<Profile />}></Route>
                   <Route path='/AddPost' element={<AddPost />}></Route>
-                  <Route path='/test' element={<Test />}></Route>
+                  <Route path='/Tests' element={<Test />}></Route>
                   <Route path='/login' element={<Login />}></Route>
                   <Route path='/detail/:id_post' element={<Detail />}></Route>
                   <Route path='/register' element={<Register />}></Route>

@@ -25,9 +25,12 @@ export default function addPost() {
     const {user}  = React.useContext(UserContext)
 
     const [preview, setPreview] = React.useState('')
+    const [videoPreview, setVideoPreview] = React.useState('')
     const [image, setImage] = React.useState([])
     const [caption, setCaption] = React.useState([])
     const [progress, setProgress] = React.useState(0)
+
+    const [sizeLimit, setSizeLimit] = React.useState(false)
 
     const [submit, setSubmit] = React.useState(false)
 
@@ -39,36 +42,44 @@ export default function addPost() {
         display: 'none',
     });   
     
-    const uploadImage = (e) => {
-        // console.log(e.target.files[0]);
-        var file = e.target.files[0];
-        var reader = new FileReader();
-        var url = reader.readAsDataURL(file);
-      
-        reader.onloadend = (e) => {
-            setPreview(reader.result);                        
-            setImage(reader.result);
-        }                 
-        // var url = URL.createObjectURL(file.originFileObj);
-        // seVideoSrc(url);
+    const uploadImage = (e) => {  
+        
+        if(e.target.files[0].size > 21000000 && e.target.files[0].type === 'video/mp4'){
+            return setSizeLimit(true)
+        }
 
-        // setPreview(url);
+        if(e.target.files[0].size > 22000000 && e.target.files[0].type === 'image/*'){
+            return setSizeLimit(true)
+        }
+                
+        if(e.target.files[0].type === 'image/jpg' || e.target.files[0].type === 'image/png' || e.target.files[0].type === 'image/jpeg'){
+            setImage('');
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            var url = reader.readAsDataURL(file);
+        
+            reader.onloadend = (e) => {
+                setPreview(reader.result);                        
+                setImage(reader.result);
+            }                         
+        }
 
-        // setImage(file)
-    }    
+        setVideoPreview('')
+        if(e.target.files[0].type === 'video/mp4'){            
+            
+            const file = e.target.files[0];            
+            var reader = new FileReader();
 
-    const handleChange = (event) => {
-        const file = event.target.files[0];
-        const url = URL.createObjectURL(file);
-        setPreview(url);
-      };
+            reader.onload = (e) => {
+                setVideoPreview(e.target.result)
+                setImage(e.target.result)
+            }
 
-    React.useEffect(() => {
-        console.log(progress)
-    },[progress])
+            reader.readAsDataURL(file);           
+        }
+    }            
 
-    React.useEffect(() => {
-        console.log(submit)
+    React.useEffect(() => {        
         if(submit){
            onSubmit()           
         }
@@ -83,13 +94,7 @@ export default function addPost() {
             onUploadProgress: (progressEvent) => {
               const { loaded, total } = progressEvent;
               var progresss = Math.floor((loaded * 100) / total);
-              setProgress(progress)
-              const timer = setInterval(() => {
-                setProgress((prevProgress) => (progresss));
-              }, 800);
-              return () => {
-                clearInterval(timer);
-              };
+              setProgress(progresss)              
             },
         };
 
@@ -102,13 +107,17 @@ export default function addPost() {
         .then((response) => {                                                 
             console.log(response.data);    
             setModal(false)            
+            setSubmit(false)
             return navigate("/", { replace: true });
         })
         .catch((error) => {
             setModal(false)
+            setSubmit(false)
             console.log(error)
         })
 
+        // console.log(image)
+        // console.log(videoPreview)        
     }
 
       React.useEffect(() => {
@@ -133,12 +142,12 @@ export default function addPost() {
             backgroundColor: '#fff'
         }}
     >
+        {console.log(progress)}
         <Box sx={{ minWidth: '100%', mb: 5 }}>
             <Typography variant='h6' component='div' sx={{ mb: 3}}>Upload your file</Typography>
-                <Box my={5}>
-                <label htmlFor="icon-button-file">
-                
-                    <Input accept="image/*" id="icon-button-file" type="file" onChange={uploadImage}/>
+                <Box my={15}>
+                <label htmlFor="icon-button-file">                
+                    <Input accept="image/*, video/*" id="icon-button-file" type="file" onChange={uploadImage}/>
                     <Box sx={{display: 'flex', justifyContent: 'center'}}>
                         <IconButton aria-label="upload picture" component="span">
                             <CameraAltIcon fontSize="large" />
@@ -148,6 +157,12 @@ export default function addPost() {
                 
                 </label>
                 </Box>
+        </Box>
+        <Box>
+            { sizeLimit ? 
+                <Typography variant='h6' color='primary'>Video tidak boleh melebihi 20MB</Typography>
+                : ''
+            }
         </Box>
         <Box my={3}>
             { preview === '' ? '' :
@@ -164,11 +179,20 @@ export default function addPost() {
                         backgroundPosition: 'center center',
                         backgroundSize: 'cover' 
                     }}
-                >
-
+                >            
             </Card>
             }
         </Box>
+        { 
+            videoPreview !== '' ?
+            <Box my={3}>                
+                <Box component='video' width="100%" height="240" controls>
+                    <source src={videoPreview} type="video/mp4" />
+                </Box>   
+            </Box>
+            :
+            ''
+        }
         <Box sx={{ minWidth: '100%' }}>
             <Typography variant='h6' component='div' sx={{ mb: 3}}>Caption</Typography>
             <TextField 
@@ -184,18 +208,10 @@ export default function addPost() {
             />
         </Box>
 
-        {/* <Box>
-            Video
-            <Player
-                playsInline
-                src={preview}
-                fluid={false}
-                width={'100%'}
-                height={600}
-            />    
-        </Box> */}
+       
         
-        <Button variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 4, mb: 3, py: 1.5}} onClick={() => setSubmit(!submit)}>Submit</Button>
+        
+        <Button variant='contained' size='large' color='success' fullWidth={true} sx={{ mt: 4, mb: 3, py: 1.5}} onClick={() => setSubmit(true)}>Submit</Button>
         <Button variant='text' color='error' fullWidth={true}  sx={{ textAlign: 'center' }} component={Links} to='/'>Delete</Button>
 
         <Modal

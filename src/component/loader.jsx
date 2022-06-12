@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 export default function loader(props) {
   return (
     <>
-        <CircularProgress value={props.progress} />  
+        <CircularProgress value={props.progress} />          
     </>
   )
 }
