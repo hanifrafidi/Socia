@@ -42,7 +42,7 @@ export default function addFriends({friends}) {
                               <Grid item xs={4} md={4} key={index} sx={{
                                 minHeight : 120,
                                 minWidth : 'auto',
-                                backgroundImage : 'url('+ post.image_path +')',
+                                backgroundImage : 'url('+ post.media_path +')',
                                 backgroundRepeat: 'no-repeat',            
                                 backgroundPosition: 'center center', 
                                 backgroundSize: 'cover',
