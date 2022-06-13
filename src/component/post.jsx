@@ -89,7 +89,7 @@ export default function post(props) {
         )
     }
     return (
-    <IconButton aria-label="favorite" sx={{ mr: 1.5}}  onClick={liked}>
+    <IconButton aria-label="favorite" color='inherit' sx={{ mr: 1.5}}  onClick={liked}>
         <FavoriteBorderIcon />
     </IconButton>
     )
@@ -110,7 +110,7 @@ export default function post(props) {
 //   }
   
   return (
-    <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 2, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
+    <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 1, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
         { imageDetail.resource_type === 'video' ?
         <Box component='video' width="100%" height="540" controls>
             <source src={props.data.media_path} type="video/mp4" />
@@ -135,7 +135,7 @@ export default function post(props) {
         >            
         </Card>
         }
-        <Box sx={{ display: 'flex', alignItems: 'center', py: {xs: 3, md: 4} }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: {xs: 1, md: 2}, mb: {xs: 3, md: 2} }}>
             <Box sx={{ flexGrow : 1}}>
                 <Box component = {Links} to={'/' + props.user.username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
                 <Avatar 
@@ -161,13 +161,13 @@ export default function post(props) {
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}> {likeCount} </Typography>
                 {checkLike()}
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}>{commentCount} </Typography>
-                <IconButton aria-label="chat" onClick={detailPage}>
+                <IconButton aria-label="chat" color='inherit' onClick={detailPage}>
                     <ChatBubbleOutlineIcon />
                 </IconButton>
             </Box>
         </Box>
-        <Box sx={{ mb: {xs : 2, md: 3}}}>
-            <Typography variant='h6' color='text'>{props.data.caption}</Typography>
+        <Box sx={{ mb: {xs : 1, md: 3}}}>
+            <Typography variant='h6' color='inherit' fontWeight='normal'>{props.data.caption}</Typography>
         </Box>
         
     </Box>

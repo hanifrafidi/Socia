@@ -47,16 +47,16 @@ export default function navbar() {
                     component={Links} 
                     color="primary"
                     to="/" 
-                    sx={{ flexGrow: 1, fontWeight: 'bolder', textDecoration: 'none' }}>
+                    sx={{ fontWeight: 'bolder', textDecoration: 'none' }}>
                     SOCIA
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center'}}>
+                <Box sx={{ display: 'flex', alignItems: 'center', ml : 'auto'}}>
                     {/* <Typography variant="button" component={Links} to='/AddPost' sx={{ mr: {xs: 0, md: 2}, textDecoration: 'none', color: 'inherit' }}>
                         Create a Post
                     </Typography>          */}                    
                     { user.user != '' ? 
                             <>
-                                <IconButton aria-label="create" size="large" sx={{ mr: 1}} component={Links} to={"/AddPost"}>
+                                <IconButton color='inherit' aria-label="create" size="large" sx={{ mr: 2}} component={Links} to={"/AddPost"}>
                                     <PhotoCameraOutlinedIcon />
                                 </IconButton>  
                                 <Avatar alt={user.user.username} src={user.user.image_url} component={Links} to={"/" + user.user.username}

@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -176,7 +177,10 @@ export default function profile({match}) {
                     }                       
 
                     { user.user.username === userProfile.username ? 
-                        <Button color="warning" variant="text" sx={{ my: 3}} onClick={logout} fullWidth={true}>Logout</Button>
+                        <Stack direction='row'>
+                            <Button color="inherit" variant="outlined" sx={{ my: 0}} fullWidth={true} component={Links} to='/u/profile/edit'>Edit Profile </Button>
+                            <Button color="warning" variant="text" onClick={logout} fullWidth={true}>Logout</Button>
+                        </Stack>
                         :
                         ''
                     }
