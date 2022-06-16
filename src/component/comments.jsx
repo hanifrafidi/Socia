@@ -47,7 +47,7 @@ export default function comments(props) {
 
         axios.post(server.url + '/post/commentt', formData)
         .then(response => {
-            console.log(response.data)
+            // console.log(response.data)
             const comment = response.data.comment;
             const user = response.data.user;                
             
@@ -98,15 +98,15 @@ export default function comments(props) {
                 />
                 
             <TextField 
-                sx={{ width: '100%', pr: 5 }} 
+                sx={{ width: '100%'}} 
                 id="standard-basic" 
-                label="Comment here" 
+                placeholder="Comment here" 
                 variant="standard" 
                 onChange={(e) => setNewComment(e.target.value)}  
                 required
             />            
 
-            <Button variant='contained' size='small' type='submit' color='primary' sx={{ px: 4, py: 1.5 }}>Submit</Button>
+            <Button variant='text' size='small' type='submit' color='primary' sx={{ px: 4, py: 1.5 }}>Submit</Button>
         </Box>
             :
             ''

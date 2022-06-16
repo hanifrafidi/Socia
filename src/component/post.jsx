@@ -1,5 +1,5 @@
 import React from 'react'
-import {useNavigate, Link as Links} from 'react-router-dom'
+import {useNavigate, Link as Links, useLocation} from 'react-router-dom'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack'
+import Modal from '@mui/material/Modal';
 
 import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
@@ -20,17 +21,22 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 import { UserContext } from '../state/UserContext'
+import { TimelineContext } from '../state/TimelineContext'
 import { server } from '../backend'
 
-export default function post(props) {
-  const [open, setOpen] = React.useState(false);
-  const [like,setLike] = React.useState(false)
+export default function post(props) {  
+  const [like,setLike] = React.useState(props.data.is_liked ? props.data.is_liked : false)
   const [likeCount,setLikeCount] = React.useState(props.data.like.length)
   const [commentCount,setCommentCount] = React.useState(props.data.comment.length)
   const [imageDetail, setImageDetail] = React.useState(props.data.media_details !== undefined ? props.data.media_details : '')   
+  const [open, setOpen] = React.useState(false);
+
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   const {user} = React.useContext(UserContext)
+  const { likePost, unlikePost } = React.useContext(TimelineContext)
 
   const handleClick = () => {
     setOpen(!open);
@@ -39,15 +45,16 @@ export default function post(props) {
   const liked = () => {
     if(user.user === ''){
         return navigate("/login", {replace: true}) 
-    }
-    
+    }        
+
     let formData = new FormData();
-    formData.append('user_id', user.user._id);    
+    formData.append('user_id', user.user._id);
         
     axios.post(server.url + '/post/like/' + props.data._id, formData)
     .then((response) => {
         console.log(response.data)
         setLike(true)
+        likePost(props.data._id)
         setLikeCount(likeCount + 1)
     })
     .catch((error) => {
@@ -67,20 +74,15 @@ export default function post(props) {
     .then((response) => {
         console.log(response.data)
         setLike(false)
+        unlikePost(props.data._id)
         setLikeCount(likeCount - 1)
     })
     .catch((error) => {
         console.log(error)
     })
-  }
+  }  
 
-  React.useEffect(() => {    
-    if(props.data.is_like) {
-        setLike( props.data.is_like )
-    }    
-  },[])
-
-  const checkLike = () => {            
+  const checkLike = () => {                
     if (like){
     return (
         <IconButton aria-label="favorite" sx={{ mr: 1.5}} color='primary' onClick={unliked}>
@@ -101,7 +103,7 @@ export default function post(props) {
 
   const changeDate = (date) => {
     return moment(Date.parse(date)).fromNow();
-  }
+  }  
 
 //   const PostImageWidth = () => {      
 //       if(props.data.image_detail !== undefined) {
@@ -124,9 +126,9 @@ export default function post(props) {
             objectFit: 'cover',
             minWidth: '100%',
             maxWidth: '100%',
-            height: {xs: '80vw', md: '30vw'},
-            minHeight: {xs: '80vw', md: '30vw'},
-            maxHeight: {xs: '80vw', md: '30vw'}
+            height: {xs: '80vw', md: '50vw', xl: '30vw'},
+            minHeight: {xs: '80vw', md: '50vw', xl: '30vw'},
+            maxHeight: {xs: '80vw', md: '50vw', xl: '30vw'}
         }}
         alt={props.user.username}
         src={props.data.media_path}
@@ -135,8 +137,8 @@ export default function post(props) {
         >            
         </Card>
         }
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: {xs: 1, md: 2}, mb: {xs: 3, md: 2} }}>
-            <Box sx={{ flexGrow : 1}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: {xs: 1, md: 2}, mb: {xs: 3, md: 5} }}>
+            <Box>
                 <Box component = {Links} to={'/' + props.user.username} sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'black'}}>                
                 <Avatar 
                     alt={props.user.username}
@@ -157,7 +159,7 @@ export default function post(props) {
                 </Stack>
                 </Box>                
             </Box>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
+            <Box sx={{display: 'flex', alignItems: 'center', ml: 'auto'}}>
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}> {likeCount} </Typography>
                 {checkLike()}
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}>{commentCount} </Typography>
@@ -169,6 +171,45 @@ export default function post(props) {
         <Box sx={{ mb: {xs : 1, md: 3}}}>
             <Typography variant='h6' color='inherit' fontWeight='normal'>{props.data.caption}</Typography>
         </Box>
+        <Modal
+        open={open}          
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}          
+        onClick={() => setOpen(false)}
+        >        
+            <Box 
+            sx={{ 
+                display: 'flex', 
+                flexDirection:'column', 
+                justifyContent: 'center', 
+                alignItems:'center', 
+                py: 15,
+                minWidth: '100%',
+                minHeight: '100%',
+                borderRadius : 1,                  
+                }}>
+                {/* <Card component='img'
+                    sx={{ 
+                        p: 0,            
+                        backgroundRepeat: 'no-repeat',            
+                        backgroundPosition: 'center center',            
+                        backgroundSize: 'cover',
+                        minWidth: {xs: '90%', xl:'50%'},
+                        maxWidth: {xs: '90%', xl:'50%'},
+                        minHeight: {xs: '100%', md: '100%'},
+                        maxHeight: {xs: '100%', md: '70%'}
+                    }}
+                    alt={props.user.username}
+                    src={props.data.media_path}
+                    loading="lazy"                      
+                    >            
+                  </Card>                                    */}
+
+                { checkLike()}
+                {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
+            </Box>
+       </Modal>
         
     </Box>
   )

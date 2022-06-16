@@ -101,11 +101,11 @@ export default function addPost() {
         let formData = new FormData();
         formData.append('files', image);
         formData.append('caption', caption);
-        formData.append('user_id', user.accessToken);                                  
+        formData.append('user_id', user.user._id);                                  
 
         axios.post( server.url +'/post/', formData, options)
         .then((response) => {                                                 
-            console.log(response.data);    
+            console.log(response.data);             
             setModal(false)            
             setSubmit(false)
             return navigate("/", { replace: true });
@@ -141,11 +141,30 @@ export default function addPost() {
             minHeight: '100vh',
             backgroundColor: '#fff'
         }}
-    >
-        {console.log(progress)}
+    >        
+    
         <Box sx={{ minWidth: '100%', mb: 5 }}>
             <Typography variant='h6' component='div' sx={{ mb: 3}}>Upload your file</Typography>
-                <Box my={15}>
+            <Box my={3}>
+            { preview === '' ? '' :
+            <Card 
+                    sx={{ 
+                        minHeight: {xs: 300, xl :500}, 
+                        minWidth: '100%', 
+                        cursor: 'pointer', 
+                        display: 'flex', 
+                        flexDirection: 'column', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        backgroundImage: 'url('+ preview +')',
+                        backgroundPosition: 'center center',
+                        backgroundSize: 'cover' 
+                    }}
+                >            
+            </Card>
+            }
+        </Box>
+                <Box my={5}>
                 <label htmlFor="icon-button-file">                
                     <Input accept="image/*, video/*" id="icon-button-file" type="file" onChange={uploadImage}/>
                     <Box sx={{display: 'flex', justifyContent: 'center'}}>
@@ -164,25 +183,7 @@ export default function addPost() {
                 : ''
             }
         </Box>
-        <Box my={3}>
-            { preview === '' ? '' :
-            <Card 
-                    sx={{ 
-                        minHeight: 500, 
-                        minWidth: '100%', 
-                        cursor: 'pointer', 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        backgroundImage: 'url('+ preview +')',
-                        backgroundPosition: 'center center',
-                        backgroundSize: 'cover' 
-                    }}
-                >            
-            </Card>
-            }
-        </Box>
+        
         { 
             videoPreview !== '' ?
             <Box my={3}>                
@@ -193,7 +194,7 @@ export default function addPost() {
             :
             ''
         }
-        <Box sx={{ minWidth: '100%' }}>
+        <Box sx={{ minWidth: '100%', mt: 5 }}>
             <Typography variant='h6' component='div' sx={{ mb: 3}}>Caption</Typography>
             <TextField 
                 id='caption'                 

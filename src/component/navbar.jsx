@@ -39,7 +39,7 @@ export default function navbar() {
 
   return (
     <Box sx={{ display: () => navDisplay() }}>
-        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none', px: { xs: 0, xl: 65.6, md: 26} }}>                                                                                
+        <AppBar position='fixed' color='transparent' sx={{ boxShadow: 'none', px: { xs: 0, xl: 65.6, md: 12.5} }}>                                                                                
             <Container maxWidth='md' sx={{ backgroundColor: 'white', py: {xs : 0.5, xl: 1}, px: { xs: 0 }, borderBottom : '0.8px solid #F5F5F5' }}>
             <Toolbar >
                 <Typography 

@@ -30,10 +30,23 @@ export default function profile({match}) {
     let [searchParams, setSearchParams] = useSearchParams();
 
 
-    const [userProfile,setProfile] = React.useState({});
-    const [posts,setPosts] = React.useState([]);
-    const [friendStatus, setFriendStatus] = React.useState('');
-    const [friends, setFriends] = React.useState([]);        
+    const [userProfile,setProfile] = React.useState({        
+        is_friend : false,
+        total_posts : ''
+    });
+    const [friendStatus, setFriendStatus] = React.useState(false);
+    const [posts,setPosts] = React.useState({
+        posts : [],
+        totalCount : '',
+        loader : true,
+        page: 1,
+        next: true
+    });    
+    const [friends, setFriends] = React.useState({
+        friends : [],
+        totalCount : '',
+    });        
+    
 
     const [error, setError] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(true)
@@ -46,50 +59,83 @@ export default function profile({match}) {
 
     const getProfile = (user_name) => { 
         let data = new FormData()
+        var user_id = ''
         
-        if(user.user !== ''){                        
-            data.append('id_viewer', user.user._id)
+        if(user.user._id !== undefined){ 
+            user_id = user.user._id
+        }                       
+            data.append('user_id', user.user._id)
             
-            axios.post( server.url + '/post/profile/' + user_name, data)
-            .then((response) => {            
-                console.log(response.data)
-                setPosts(response.data.post)            
-                setProfile(response.data.profile)
-                setFriends(response.data.profile.friend_profile)
-                setFriendStatus(response.data.friend_status)                            
-
-                setTimeout(()=> {
-                    setIsLoading(false)
-                }, 300)
+            axios.post( server.url + '/user/profile/' + user_name, data)
+            .then((response) => {     
+                // console.log(response.data)
+                setProfile({
+                    ...response.data.user_profile,
+                    is_friend : response.data.is_friend.is_friend,
+                    total_posts : response.data.total_posts
+                })                
+                setFriendStatus(response.data.is_friend)
+                setIsLoading(false)
+                
             })
             .catch((err) => {
                 console.log(err.response.data.message)
-            })
-        }else{
-            axios.get( server.url + '/post/profile/' + username)
-            .then((response) => {            
-                console.log(response.data)
-                setPosts(response.data.post)            
-                setProfile(response.data.profile)
-                setFriends(response.data.profile.friend_profile)            
-                setFriendStatus(response.data.friend_status)                
-
-                setTimeout(()=> {
-                    setIsLoading(false)
-                }, 300)
-            })
-            .catch((err) => {
-                console.log(err)
                 setError(true)
-            })
-        }   
+            })          
+    }   
+
+    const getPost = (user_name) => {                                
+        axios.get( server.url + '/post/user/' + user_name + '/' + posts.page)
+        .then((res) => {        
+            var res = res.data
+            setTimeout(() => {                        
+                setPosts({
+                    posts : [...posts.posts, ...res.posts],
+                    totalCount : res.totalCount.value,
+                    page: posts.page + 1,                                
+                    next: res.posts.length === 0 || res.posts.length < 9 ? false : true,
+                    loader : false,
+                })                                        
+            },300)            
+        })
+        .catch((err) => {
+            console.log(err.response.data.message)
+            setError(true)
+        })          
+    
     }
+
+    const getFriends = (user_name) => {                            
+        axios.get( server.url + '/user/profile/friends/' + user_name)
+        .then((response) => {       
+            // console.log(response.data)   
+            setFriends({
+                friends : response.data.friends,
+                totalCount : response.data.totalCount.value
+            })                                        
+        })
+        .catch((err) => {
+            console.log(err.response.data.message)
+            setError(true)
+        })          
+}
                         
-    React.useEffect(() => {                              
-        setTimeout(()=> {
-            getProfile(username)        
-        }, 300)
+    React.useEffect(() => {                           
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;           
+        getProfile(username)            
+        
     },[])
+    
+
+    React.useEffect(() => {
+        if(value === '1'){
+            getPost(username)                 
+        }
+        if(value === '2'){
+            getFriends(username)
+        }
+    },[value])
 
     const movePage = (user_name) => {
         navigate('/' + user_name, { replace: true })
@@ -118,15 +164,8 @@ export default function profile({match}) {
     }
     
     const checkFriend = () => {        
-        var check = false;                
-        
-        if(friendStatus !== ''){
-            if(friendStatus.friend === 1){
-                check = true
-            }
-        }
-
-        if(check){
+                        
+        if(userProfile.is_friend){
             return(
                 <Button  variant="outlined" color="inherit" fullWidth={true} onClick={deleteFriend}>Delete Friend</Button>
             )
@@ -154,6 +193,17 @@ export default function profile({match}) {
         })
     }
 
+    window.onscroll = () => {
+        if (window.innerHeight + document.documentElement.scrollTop === document.documentElement.offsetHeight) {
+          // if(!noData) {
+          //   loadUserList(page);
+          // }
+          if(value === '1' && posts.next){            
+            getPost(username)
+          }        
+        }
+      }
+
   return (
     <div>        
         {
@@ -178,36 +228,42 @@ export default function profile({match}) {
 
                     { user.user.username === userProfile.username ? 
                         <Stack direction='row'>
-                            <Button color="inherit" variant="outlined" sx={{ my: 0}} fullWidth={true} component={Links} to='/u/profile/edit'>Edit Profile </Button>
+                            <Button color="inherit" variant="text" sx={{ my: 0}} fullWidth={true} component={Links} to={'/profile/edit/' + userProfile.username}>Edit Profile </Button>
                             <Button color="warning" variant="text" onClick={logout} fullWidth={true}>Logout</Button>
                         </Stack>
                         :
                         ''
                     }
-                    </Box>
+                    </Box>                    
             </Box>
-            <Box>
+            <Box>            
                 <TabContext value={value}>
                     <Box sx={{ borderColor: 'divider', display: 'flex', justifyContent: 'center', }}>
                         <TabList 
                             onChange={handleChange} 
                             aria-label="lab API tabs example" 
                             sx={{ display: 'flex', justifyContent: 'center'}}>
-                            <Tab label={"Posts " + posts.length } value="1" sx={{ mx: {xs: 0, md: 5}}}/>
-                            <Tab label={"Friend " + friends.length} value="2" sx={{ mx: {xs: 0, md: 5}}}/>
+                            <Tab label={"Posts " + userProfile.total_posts } value="1" sx={{ mx: {xs: 0, md: 5}}}/>
+                            <Tab label={"Friend " + userProfile.friend.length} value="2" sx={{ mx: {xs: 0, md: 5}}}/>
                             <Tab label="Circle" value="3" sx={{ mx: {xs: 0, md: 5}}}/>
                         </TabList>
                     </Box>
-                    <TabPanel value="1" sx={{ px: {xs: 1 , md: 3}, minHeight: '100vh' }}>
-                        <Grid 
+                    <TabPanel value="1" sx={{ px: {xs: 1 , md: 3}, minHeight: 'auto' }}>
+                        {
+                            posts.posts.length === 0 ?
+                            <Box display='flex' justifyContent='center' mt={3}>
+                                <Loader />
+                            </Box>
+                            :
+                            <>
+                                <Grid 
                             container
                             direction="row"
                             // justifyContent="space-between"                        
-                            spacing={{xs : 0.5, md: 1}}
-                            sx={{ minHeight : 'auto', pb: 15 }}
+                            spacing={{xs : 0.5, md: 1}}                            
                         >
                             {
-                                posts.map((post, index) => {
+                                posts.posts.map((post, index) => {
                                     return(
                                         <Grid item xs={4} md={4} key={index} 
                                         sx={{  p: 0, mb: { xs : 0}  }} 
@@ -233,16 +289,27 @@ export default function profile({match}) {
                                     )
                                 })
                             }                        
-                        </Grid>
+                                </Grid> 
+                                { posts.next ? 
+                                    <Box py={5} display='flex' justifyContent='center'>
+                                        <Loader />
+                                    </Box>
+                                    : 
+                                    <Box py={3}></Box>
+                                }
+                            </>
+                        
+                        }
+                        
                     </TabPanel>
-                    <TabPanel value="2">
+                    <TabPanel value="2" sx={{ px: {xs: 1 , md: 15}, minHeight: '100vh' }}>
                         
                             {
-                                friends.map((friend, index) => {
+                                friends.friends.map((friend, index) => {
                                     return(
-                                        <Box sx={{display: 'flex', alignItems:'center', mb: 5,  textDecoration: 'none', color: 'black'}} key={index} onClick={() => movePage(friend.username)}>
-                                            <Avatar alt={friend.username} src={friend.image_url} sx={{ mr: 3, border: '0.5px solid #F2F2F2'}} />
-                                            <Typography variant='body1'>{friend.username}</Typography>                                    
+                                        <Box sx={{display: 'flex', alignItems:'center', mb: 5,  textDecoration: 'none', color: 'black'}} key={index} onClick={() => movePage(friend.friend.username)}>
+                                            <Avatar alt={friend.friend.username} src={friend.friend.image_url} sx={{ mr: 3, border: '0.5px solid #F2F2F2'}} />
+                                            <Typography variant='body1'>{friend.friend.username}</Typography>                                    
                                         </Box>
                                     )
 
@@ -255,12 +322,12 @@ export default function profile({match}) {
             </Box>
             : 
             
-            <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>                
                 { error ? 
                     <Typography variant='h5' sx={{ mt: 10}}>User tidak ditemukan</Typography>
                     :
                     <Box sx={{ minWidth: '100%'}} display='flex' justifyContent='center' pt={15} >
-                        <Loader />
+                        
                     </Box>
                 }
             </Box>
