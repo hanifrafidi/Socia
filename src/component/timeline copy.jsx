@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import InfiniteScroll from 'react-infinite-scroller'
 import { server } from '../backend'
 import { UserContext } from '../state/UserContext'
 
@@ -18,12 +19,10 @@ import { PosterImage } from 'video-react'
 import post from '../component/skeleton/post'
 
 import { TimelineContext } from '../state/TimelineContext'
-import { useNavigate, Link as Links} from 'react-router-dom'
 
 export default function timeline() {
-    const {user} = React.useContext(UserContext)    
+    const {user} = React.useContext(UserContext)
     const { Timeline, addToTimeline, page, setPage, refreshTimeline } = React.useContext(TimelineContext)
-    const navigate = useNavigate()
     
     // var timeline = []
     const [datas,setDatas] = React.useState([])                
@@ -76,7 +75,7 @@ export default function timeline() {
         .then((response) => {                                              
           const newPost = response.data.posts;                              
                                                   
-          if(newPost.length === 0 || newPost.length < limit) {
+          if(newPost.length === 0) {
             setNext(false)
             setIsFetching(false)            
 
@@ -87,11 +86,13 @@ export default function timeline() {
             localStorage.setItem("page", (pages + 1))
             
 
-            return render = newPost            
+            return render = renderPost(newPost)            
           }                                
         })
         .catch((error) => {
-          console.log(error);                            
+          console.log(error);                  
+          
+
           return setError(true)          
         })                                             
 
@@ -117,8 +118,8 @@ export default function timeline() {
         
         
         if(response.data.posts.length > 0){
-          render = response.data.posts
-          // console.log(response.data)
+          render = renderFriends(response.data.posts)          
+          
           return render
           // addToTimeline(friends[0])
         }
@@ -143,14 +144,10 @@ export default function timeline() {
         friend = response        
       })      
 
-      var timeline = [...posts]
-
-      timeline.push(friend)
-
-      // console.log(friend)
+      var timeline = [...posts, ...friend]
 
       addToTimeline(timeline)
-      // setIsFetching(false)               
+      setIsFetching(false)               
     }
 
     const nextTimeline = async () => {
@@ -164,28 +161,22 @@ export default function timeline() {
         friend = response        
       })      
 
-      var timeline = [...posts]
-
-      timeline.push(friend)       
+      var timeline = [...posts, ...friend]
 
       addToTimeline(timeline)
-      // setIsFetching(false)               
+      setIsFetching(false)               
     }
 
     React.useEffect(() => {      
-      if(user.user === ''){
-        return navigate("/login", {replace: true}) 
-      }
-
-      if(Timeline.length === 0 && Timeline !== undefined){
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
+      if(Timeline.length === 0){
         newTimeline()
       }
       
+
+
       // getFriends(0)             
       // checkNewPost(1)                  
-      
+
       return () => {
         setDatas([])
         setAddFriends([])        
@@ -193,11 +184,20 @@ export default function timeline() {
       }      
     },[])
 
-    React.useEffect(() => {        
+    React.useEffect(() => {
+      // console.log(page)      
       if(page === 1){
         newTimeline()
       }         
-    },[page])    
+    },[page])
+
+    // React.useEffect(() => {
+    //   if(addFriends.length > 0){
+    //     console.log(addFriends)
+    //   }
+    //   // renderFriends
+    //   // addToTimeline(renderFriends())
+    // },[addFriends])
 
     const renderPost = (post) => {        
       var list = []      
@@ -209,10 +209,10 @@ export default function timeline() {
       return list
     }
     // var timeline = React.useMemo(() => renderPost(),[datas])
-    const renderFriends = (friend,i) => {        
+    const renderFriends = (friend) => {        
       var list = []      
       var cek = (
-        <div key={i}>
+        <div key={Timeline.length + 1}>
           <Box p={3} backgroundColor='white' mt={1} >
             <Typography variant='h6' color='primary' align='center' >Add New Friend</Typography>          
           </Box>
@@ -225,16 +225,51 @@ export default function timeline() {
             }
         </div>
       )
-      
       list.push(cek)
       
-      
-      if(friend.length > 0){
-        return list;        
-      }else{
-        return ''
-      }
-    }                
+      return list;        
+    }        
+
+    
+
+    const nextPost = (pages) => {      
+      // console.log(pages)
+      var userId = ''
+      if(user.user !== ''){
+        userId = user.user._id
+      }        
+      var formData = new FormData()
+      formData.append('page', pages);
+      formData.append('limit', limit);
+      formData.append('user_id', userId);      
+
+        axios.post(server.url + '/post/timeline', formData)        
+        .then((response) => {                                              
+          const newList = response.data.posts;
+          // const newList = [...datas, ...response.data.posts]
+          setDatas(newList)      
+          const render = renderPost(newList)          
+          addToTimeline(render)  
+
+          if(response.data.posts.length === 0) {
+            setNext(false)                                                                          
+          }else{                                    
+            setNext(true)
+            setPage(pages + 1)
+            localStorage.setItem("page", (page + 1))
+          }                 
+          getFriends(page)        
+                    
+          setIsFetching(false)                              
+          
+        })
+        .catch((error) => {
+          console.log(error);
+          setError(true)
+          setIsFetching(false)
+          // setisLoading(false)
+        })            
+    }
 
     const checkNewPost = (page) => {            
       var userId = user.user._id
@@ -308,39 +343,12 @@ export default function timeline() {
   return (
     <Box minHeight='100vh'>       
         
-              {/* {Timeline}                          */}
+              {Timeline}                         
               {/* {
                 isFetching ? 
                 <SkeletonPost  />
                 : ''
               } */}
-
-              {
-                
-                Timeline.length > 0 ?
-                <>
-                  {Timeline.map((data,i) => {
-                    return(
-                      data._id === undefined ? 
-                      renderFriends(data,i)
-                      : 
-                      <Post user={data.user_detail[0]} data={data} key={i} />                      
-                    )
-                  })}
-                  { next ? 
-                    <Box display='flex' justifyContent='center' py={5}>
-                      <Loader />
-                    </Box>                    
-                    : 
-                    ''
-                  }
-                </>
-                :
-                <>
-                  <SkeletonPost />
-                  <SkeletonPost />
-                </>
-              }
 
               <Snackbar sx={{ mt: 8,}}
                 // anchorOrigin={{ vertical, horizontal }}

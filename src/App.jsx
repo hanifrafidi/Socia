@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box'
 
 import Navbar from './component/navbar'
-import Post from './component/post'
+import EditProfile from './component/editProfile'
 import Timeline from './component/timeline'
 import Profile from './component/profile'
 import AddPost from './component/addPost'
@@ -19,6 +19,7 @@ import Test from './component/test'
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 
 import UserProvider from './state/UserContext'
+import TimelineProvider from './state/TimelineContext'
 
 import axios from 'axios';
 
@@ -40,6 +41,7 @@ function App() {
   return (    
     <div>      
         <UserProvider>
+        
             <Box
              sx={{ 
                 backgroundColor: '#f0f5f5', 
@@ -53,26 +55,32 @@ function App() {
               <Container maxWidth='md' 
                sx={{ 
                 pt: {xs: 8, md : 10}, 
-                pb: 5,                 
+                pb: {xs: 1, xl :5},                 
                 px: 0, 
                 minHeight: {xs: '100vh', md : '100vh'},                
                  }}>
                 <Navbar></Navbar>
-                <Routes>
-                  <Route path='/' element={<Timeline />}></Route>
-                  <Route path='/:username' element={<Profile />}></Route>
-                  <Route path='/Profile' element={<Profile />}></Route>
+                <Routes>                  
+                
+                  <Route path='/' element={<TimelineProvider><Timeline /> </TimelineProvider>}></Route>
+                  <Route path='/detail/:id_post' element={<TimelineProvider><Detail /></TimelineProvider>}></Route>
+                  <Route path='/AddPost' element={<TimelineProvider><AddPost /></TimelineProvider>}></Route>
+
+
+                  <Route path='/:username' element={<Profile />}></Route>                  
                   <Route path='/profile/:username' element={<Profile />}></Route>
-                  <Route path='/AddPost' element={<AddPost />}></Route>
-                  <Route path='/Tests' element={<Test />}></Route>
-                  <Route path='/login' element={<Login />}></Route>
-                  <Route path='/detail/:id_post' element={<Detail />}></Route>
+                  <Route path='/profile/edit/:username' element={<EditProfile />}></Route>                  
+                  
+                  <Route path='/login' element={<Login />}></Route>                  
                   <Route path='/register' element={<Register />}></Route>
+
+                  <Route path='/Tests' element={<Test />}></Route>
                   {/* <Route path='/auth' element={<Auth />}></Route> */}
                 </Routes>            
               </Container>
             </Box>
-        </UserProvider>
+            
+        </UserProvider>        
       </div>
         // <div></div>
   )

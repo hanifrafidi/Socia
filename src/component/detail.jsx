@@ -93,7 +93,7 @@ export default function detail() {
 
     axios.post(server.url + '/post/' + id_post, formData)
     .then(response => {
-      console.log(response.data)
+      // console.log(response.data)
       setPost(response.data.post)
       setUserDetail(response.data.user)      
       setLikeCount(response.data.post.like.length)
@@ -101,23 +101,24 @@ export default function detail() {
       setLike(response.data.post.is_liked)
       setComment(response.data.post.comment)  
       
-      setTimeout(() => {
+      
         setIsLoading(false)
-      },400)      
+      
     })
     .catch((error) => {
       console.log(error.message)
       
-      setTimeout(() => {
-        setIsLoading(false)
-      },200)
+      
+        setIsLoading(false)      
     })
   }
 
   React.useEffect(() => {    
     getPost()
     
-    return (getPost())
+    return () => {
+      null
+    }
   },[])
 
   const checkLike = () => {            
