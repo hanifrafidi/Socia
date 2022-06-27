@@ -10,11 +10,10 @@ import Profile from './component/profile'
 import AddPost from './component/addPost'
 import Register from './component/register'
 import Detail from "./component/detail";
-
-// import Auth from './component/auth'
 import Login from './component/login'
-
 import Test from './component/test'
+import Notif from './component/notification'
+import EditPost from './component/editPost'
 
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 
@@ -52,11 +51,10 @@ function App() {
                 p: 0, 
                 minHeight: {xs: '100%', md:'100vh'},                
              }}>
-              <Container maxWidth='md' 
+              <Container maxWidth='md' disableGutters
                sx={{ 
-                pt: {xs: 8, md : 10}, 
-                pb: {xs: 1, xl :5},                 
-                px: 0, 
+                pt: {xs: 8, md : 11}, 
+                pb: {xs: 1, xl :5},                                 
                 minHeight: {xs: '100vh', md : '100vh'},                
                  }}>
                 <Navbar></Navbar>
@@ -64,15 +62,16 @@ function App() {
                 
                   <Route path='/' element={<TimelineProvider><Timeline /> </TimelineProvider>}></Route>
                   <Route path='/detail/:id_post' element={<TimelineProvider><Detail /></TimelineProvider>}></Route>
+                  <Route path='/edit/post/:id_post' element={<TimelineProvider><EditPost /></TimelineProvider>}></Route>
+                  
                   <Route path='/AddPost' element={<TimelineProvider><AddPost /></TimelineProvider>}></Route>
 
-
-                  <Route path='/:username' element={<Profile />}></Route>                  
-                  <Route path='/profile/:username' element={<Profile />}></Route>
+                  <Route path='/:username' element={<Profile />}></Route>                                    
                   <Route path='/profile/edit/:username' element={<EditProfile />}></Route>                  
                   
                   <Route path='/login' element={<Login />}></Route>                  
                   <Route path='/register' element={<Register />}></Route>
+                  <Route path='/notification' element={<Notif />}></Route>
 
                   <Route path='/Tests' element={<Test />}></Route>
                   {/* <Route path='/auth' element={<Auth />}></Route> */}

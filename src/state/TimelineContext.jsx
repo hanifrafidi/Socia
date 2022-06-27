@@ -20,7 +20,6 @@ const TimelineProvider = (props) => {
     const unlikePost = id => { return unlikePosts(Timeline,id)}
 
     React.useEffect(() => {
-
         return () => {
             setTimeline([])
             setPage(1)

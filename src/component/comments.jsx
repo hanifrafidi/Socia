@@ -76,7 +76,7 @@ export default function comments(props) {
 
         
   return (
-    <Box sx={{ mt: 5, mb: 5}}>        
+    <Box sx={{ mt: 5, mb: 5, px: {xs: 2, md: 5},}}>        
         <Box sx={{ display: 'flex'}}>
             <Typography variant='h6' component='div' color='text.secondary' sx={{ flexGrow: 1 }}>Comments</Typography>
             {/* <Typography variant='subtitle1' component='div'>Filter</Typography> */}

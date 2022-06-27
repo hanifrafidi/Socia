@@ -22,6 +22,7 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { styled } from '@mui/material/styles';
 
 import {UserContext} from '../state/UserContext'
+import { grey } from '@mui/material/colors';
 
 export default function register() {
   const [preview, setPreview] = React.useState([])
@@ -30,9 +31,9 @@ export default function register() {
   const [username, setUsername] = React.useState('')
   const [email, setEmail] = React.useState('')
   const [password, setPassword] = React.useState('')
-  // const [firstName, setFirstName] = React.useState('')
-  // const [LastName, setLastName] = React.useState('')
-  // const [location, setLocation] = React.useState('')
+  
+  const [checkUsername, setCheckUsername] = React.useState(false)
+  const [checkEmail, setCheckEmail] = React.useState(false)
   
   const [modal, setModal] = React.useState(false)
 
@@ -49,6 +50,36 @@ export default function register() {
   const Input = styled('input')({
       display: 'none',
   });
+
+  const checkUser = () => {
+    axios.get(server.url + '/user/check_user/'+ username)
+    .then((response) => {
+      console.log(response.data)
+      if(response.data.user.length > 0){
+        setCheckUsername(true)
+      }else{
+        setCheckUsername(false)
+      }
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
+
+  React.useEffect(() => {    
+    
+    if(username !== ''){
+      var delay = setTimeout(() => {      
+        checkUser()
+      }, 3000)    
+      return () => clearTimeout(delay)
+    }else{
+      setCheckUsername(false)
+    }
+      
+  },[username])
+  
+  // React.useEffect(() => { console.log(checkUsername)},[checkUsername])
 
   const uploadImage = (e) => {
     // console.log(e.target.files[0]);
@@ -84,7 +115,7 @@ export default function register() {
           return login(response.data)
       })
       .catch((error) => {
-          console.log(error)
+          console.log(error.data)
           setModal(false)
       })
 
@@ -117,9 +148,11 @@ export default function register() {
             type='text'
             variant='outlined'
             size='small'            
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value.toLowerCase())}
             required
             fullWidth
+            error = {checkUsername}
+            helperText={ checkUsername ? "username has been used" : ''}
            />          
         </Box>
 
@@ -214,10 +247,9 @@ export default function register() {
                 }}
             >
                 <IconButton size="large">
-                    <CameraAltIcon fontSize="large" />
+                    <CameraAltIcon fontSize="large" sx={{ color: grey[700] }} />
                 </IconButton>
-                <Typography variant='subtitle1' component='div'>Upload your photo profile</Typography>
-                
+                <Typography variant='subtitle1' component='div'>Upload your photo profile</Typography>                
             </Card>
             </label> 
         </Box>
