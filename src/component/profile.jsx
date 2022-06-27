@@ -64,14 +64,14 @@ export default function profile({match}) {
         if(user.user._id !== undefined){ 
             user_id = user.user._id
         }                       
-            data.append('user_id', user.user._id)
+            data.append('user_id', user_id)
             
             axios.post( server.url + '/user/profile/' + user_name, data)
             .then((response) => {     
                 // console.log(response.data)
                 setProfile({
                     ...response.data.user_profile,
-                    is_friend : response.data.is_friend.is_friend,
+                    is_friend : response.data.is_friend,
                     total_posts : response.data.total_posts
                 })                
                 setFriendStatus(response.data.is_friend)
@@ -79,7 +79,7 @@ export default function profile({match}) {
                 
             })
             .catch((err) => {
-                console.log(err.response.data.message)
+                console.log(err)
                 setError(true)
             })          
     }   
@@ -87,6 +87,7 @@ export default function profile({match}) {
     const getPost = (user_name) => {                                
         axios.get( server.url + '/post/user/' + user_name + '/' + posts.page)
         .then((res) => {        
+            // console.log(res.data)
             var res = res.data
             setTimeout(() => {                        
                 setPosts({
@@ -125,6 +126,9 @@ export default function profile({match}) {
         document.documentElement.scrollTop = 0;           
         getProfile(username)            
         
+        return () => {
+            null
+        }
     },[])
     
 
@@ -209,7 +213,7 @@ export default function profile({match}) {
         {
             
         !isLoading ?
-            <Box sx={{ mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
+            <Box sx={{ mt: 0, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh' }}>                                
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', py: {xs: 5, md: 10}}}>
                     <Avatar 
                             alt={userProfile.username}
@@ -322,7 +326,7 @@ export default function profile({match}) {
             </Box>
             : 
             
-            <Box sx={{ px: {xs: 1, md: 3}, mt: 1, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>                
+            <Box sx={{ px: {xs: 1, md: 3}, mt: 0, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>                
                 { error ? 
                     <Typography variant='h5' sx={{ mt: 10}}>User tidak ditemukan</Typography>
                     :

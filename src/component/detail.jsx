@@ -1,5 +1,5 @@
 import React from 'react'
-import {useNavigate, useParams, Link as Links} from 'react-router-dom'
+import {useNavigate, useParams, Link as Links, useLocation} from 'react-router-dom'
 import axios from 'axios'
 
 import Post from '../component/post'
@@ -23,9 +23,10 @@ import { UserContext } from '../state/UserContext'
 import { server } from '../backend'
 
 import SkeletonPost from '../component/skeleton/post'
-
 export default function detail() {
-  const [post,setPost] = React.useState([])
+  const { id_post } = useParams()
+  
+  const [post,setPost] = React.useState('')
   const [comment,setComment] = React.useState([])
 
   const [open, setOpen] = React.useState(false);
@@ -39,52 +40,13 @@ export default function detail() {
   const [modal,setModal] = React.useState(false)
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {user} = React.useContext(UserContext)
 
   const handleClick = () => {
     setOpen(!open);
-  };
-
-  const liked = () => {
-    if(user.user === ''){
-        return navigate("/login", {replace: true}) 
-    }
-    
-    let formData = new FormData();
-    formData.append('user_id', user.user._id);    
-        
-    axios.post(server.url + '/post/like/' + post._id, formData)
-    .then((response) => {
-        console.log(response.data)
-        setLike(true)
-        setLikeCount(likeCount + 1)
-    })
-    .catch((error) => {
-        console.log(error)
-    })
-  }
-
-  const unliked = () => {
-    if(user.user === ''){
-        return navigate("/login", {replace: true}) 
-    }
-    
-    let formData = new FormData();
-    formData.append('user_id', user.user._id);    
-        
-    axios.post(server.url + '/post/unlike/' + post._id, formData)
-    .then((response) => {
-        console.log(response.data)
-        setLike(false)
-        setLikeCount(likeCount - 1)
-    })
-    .catch((error) => {
-        console.log(error)
-    })
-  }
-
-  const { id_post } = useParams()
+  };  
 
   const getPost = () => {
 
@@ -93,16 +55,11 @@ export default function detail() {
 
     axios.post(server.url + '/post/' + id_post, formData)
     .then(response => {
-      // console.log(response.data)
+      console.log(response.data)
       setPost(response.data.post)
-      setUserDetail(response.data.user)      
-      setLikeCount(response.data.post.like.length)
-      setCommentCount(response.data.post.comment.length)  
-      setLike(response.data.post.is_liked)
-      setComment(response.data.post.comment)  
+      setUserDetail(response.data.user)                 
       
-      
-        setIsLoading(false)
+      setIsLoading(false)
       
     })
     .catch((error) => {
@@ -113,42 +70,27 @@ export default function detail() {
     })
   }
 
-  React.useEffect(() => {    
-    getPost()
+  React.useEffect(() => {            
+    // getPost()        
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;           
     
+    getPost()        
+
     return () => {
       null
     }
-  },[])
-
-  const checkLike = () => {            
-    if (like){
-    return (
-        <IconButton aria-label="favorite" sx={{ mr: 1.5}} color='primary' onClick={() => unliked()}>
-            <FavoriteIcon />
-        </IconButton>
-        )
-    }
-    return (
-    <IconButton aria-label="favorite" sx={{ mr: 1.5}}  onClick={() => liked()}>
-        <FavoriteBorderIcon />
-    </IconButton>
-    )
-  }
+  },[])  
   
   return (        
-    <div>      
-      { isLoading ? 
-      <Box>
-        <SkeletonPost />
-      </Box> 
-        :         
-      <Box sx={{ backgroundColor: '#fff' }}>                  
-          <Post user={userDetail} data= {post} />                                                            
-          <Box sx={{ px: {xs: 2, md: 5}, pb: 2 }}>
+    <Box sx={{ mt: 0, backgroundColor: '#fff', borderRadius: 1.5, minHeight: '100vh', display: 'flex', justifyContent: 'center' }}>                            
+      { typeof post === 'object' ?
+      <Box sx={{ backgroundColor: '#fff', }}>                  
+          <Post user={userDetail} data= {post} />          
+          
+          <Box pb={5}>
             <Comments open={open} posts={post} comments={post.comment}></Comments>          
           </Box>
-
           <Modal
           open={modal}          
           aria-labelledby="modal-modal-title"
@@ -185,9 +127,12 @@ export default function detail() {
                     </Card>                                   
                   {/* <Button variant='text' size='medium' color="inherit" onClick={() => setModal(false)}> Close</Button> */}
               </Box>
-         </Modal>
+         </Modal>         
+      </Box>      
+      :
+      <Box sx={{ minWidth: '100%'}} display='flex' justifyContent='center' pt={15} >                        
       </Box>
     }
-    </div>
+    </Box>
   )
 }

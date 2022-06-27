@@ -11,6 +11,7 @@ const UserProvider = (props) => {
     })    
     const navigate = useNavigate()
 
+    const updateProfile = response => {updateUser(user,response,setUser)}
     const login = response => {loginUser(user,response,setUser,navigate)}
     const logout = () => {logoutUser(user,setUser,navigate)}
 
@@ -19,7 +20,8 @@ const UserProvider = (props) => {
         value={{
             user,
             login,
-            logout
+            logout,
+            updateProfile
         }}>
             {props.children}
         </UserContext.Provider>
@@ -42,6 +44,25 @@ const loginUser = (user,response,setUser,navigate) => {
                 photo : localStorage.getItem("photo")        
         })    
         return navigate("/", {replace: true})    
+    }
+}
+
+const updateUser = (user,response,setUser) => {        
+    
+    if(response.error != null){
+        console.log(user)
+        return console.log('error : ', response)
+    }else{            
+        localStorage.setItem("token", response._id)
+        localStorage.setItem("user", JSON.stringify(response))        
+        localStorage.setItem("photo", response.image_url)
+        setUser( {
+                ...user,
+                user : JSON.parse(localStorage.getItem("user")),
+                accessToken : localStorage.getItem("token"),    
+                photo : localStorage.getItem("photo")        
+        })    
+        // return navigate("/", {replace: true})    
     }
 }
 

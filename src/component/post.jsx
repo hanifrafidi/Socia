@@ -14,15 +14,16 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack'
 import Modal from '@mui/material/Modal';
 
-import Collapse from '@mui/material/Collapse';
 import Card from '@mui/material/Card';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import { UserContext } from '../state/UserContext'
 import { TimelineContext } from '../state/TimelineContext'
 import { server } from '../backend'
+import MoreVert from '@mui/icons-material/MoreVert'
 
 export default function post(props) {  
   const [like,setLike] = React.useState(props.data.is_liked ? props.data.is_liked : false)
@@ -58,7 +59,7 @@ export default function post(props) {
         setLikeCount(likeCount + 1)
     })
     .catch((error) => {
-        console.log(error)
+        console.log(error.response.data)
     })
   }
 
@@ -98,7 +99,17 @@ export default function post(props) {
   }
 
   const detailPage = () => {
-    return navigate("/detail/" + props.data._id), {replace: true}
+    return navigate("/detail/" + props.data._id, 
+        // { state : {user : props.user, data : props.data} } 
+    ),
+     {replace: true}
+  }
+
+  const editPage = () => {
+    return navigate("/edit/post/" + props.data._id, 
+        { state : {user : props.user, data : props.data} } 
+    ),
+     {replace: true}
   }
 
   const changeDate = (date) => {
@@ -112,7 +123,7 @@ export default function post(props) {
 //   }
   
   return (
-    <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 1, my: 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
+    <Box sx={{ px: {xs: 2, md: 5}, pt: {xs: 2, md: 5}, pb: 1, mb : 1, backgroundColor: '#fff', borderRadius: 1.5 }}>
         { imageDetail.resource_type === 'video' ?
         <Box component='video' width="100%" height="540" controls>
             <source src={props.data.media_path} type="video/mp4" />
@@ -165,6 +176,9 @@ export default function post(props) {
                 <Typography variant="body1" sx={{ mr: {xs: 0, md: 1}}}>{commentCount} </Typography>
                 <IconButton aria-label="chat" color='inherit' onClick={detailPage}>
                     <ChatBubbleOutlineIcon />
+                </IconButton>
+                <IconButton aria-label="chat" color='inherit' onClick={editPage}>
+                    <MoreVertIcon />
                 </IconButton>
             </Box>
         </Box>
