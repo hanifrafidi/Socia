@@ -17,6 +17,7 @@ import {
 } from '@mui/material'
 
 import Loader from '../component/loader'
+import background from '../background.jpg'
 
 import { useNavigate, Link as Links} from "react-router-dom";
 
@@ -78,6 +79,7 @@ export default function login() {
     },[])
 
   return (
+    <div>          
     <Card
       component='form' 
       onSubmit = {onSubmit}
@@ -86,12 +88,11 @@ export default function login() {
           display: 'flex', 
           px: { xs : 3, md: 10 },
           py : { xs : 5, md: 8 },
-          mx: { xs : 2, md: 20 },
-          my: { xs : 1, md: 10 },
+          mx: { xs : 2, md: 25 },
+          my: { xs : 1, md: 5 },
           
           flexDirection: 'column',
-          // minHeight: '100%',
-          backgroundColor: '#fff',          
+          // minHeight: '100%',          
         }}>
 
         <Typography variant='h3' align='center' sx={{ fontWeight: 'bold', mb: 3, color: '#eb5757' }}>SOCIA</Typography>
@@ -157,5 +158,6 @@ export default function login() {
               </Box>
          </Modal>
     </Card>
+    </div>
   )
 }
