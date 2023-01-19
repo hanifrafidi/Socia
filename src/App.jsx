@@ -9,6 +9,7 @@ import Timeline from './component/timeline'
 import Profile from './component/profile'
 import AddPost from './component/addPost'
 import Register from './component/register'
+import Bgr from './component/bgr'
 import Detail from "./component/detail";
 import Login from './component/login'
 import Test from './component/test'
@@ -39,24 +40,23 @@ function App() {
     
   return (    
     <div>      
-        <UserProvider>
-        
-            <Box
-             sx={{ 
-                backgroundColor: '#f0f5f5', 
-                backgroundImage : 'url('+ bgr() +')',
-                backgroundRepeat: 'no-repeat',            
-                backgroundPosition: 'center center',            
-                backgroundSize: 'cover',
-                p: 0, 
-                minHeight: {xs: '100%', md:'100vh'},                
-             }}>
-              <Container maxWidth='md' disableGutters
-               sx={{ 
-                pt: {xs: 8, md : 11}, 
-                pb: {xs: 1, xl :5},                                 
-                minHeight: {xs: '100vh', md : '100vh'},                
-                 }}>
+        <UserProvider>        
+                <Box
+              sx={{                 
+                        backgroundImage : 'url('+ background +')',
+                        backgroundRepeat: 'no-repeat',            
+                        backgroundPosition: 'center',            
+                        backgroundSize: 'cover',
+                        p: 0, 
+                        minHeight: {xs: '100vh', md:'100vh'},
+                        minWidth: {xs: '100vw', md:'100vw'},
+                        position: 'fixed',
+                        top: 0,left: 0,        
+                        zIndex: 'mobile stepper'
+                    }}
+              />
+              <Container maxWidth='md' disableGutters sx={{position:'relative', zIndex: 'fab'}}
+               >
                 <Navbar></Navbar>
                 <Routes>                  
                 
@@ -76,8 +76,7 @@ function App() {
                   <Route path='/Tests' element={<Test />}></Route>
                   {/* <Route path='/auth' element={<Auth />}></Route> */}
                 </Routes>            
-              </Container>
-            </Box>
+              </Container>            
             
         </UserProvider>        
       </div>

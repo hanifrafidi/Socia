@@ -129,10 +129,10 @@ export default function register() {
       enctype='multipart/form-data'
       
       sx={{ 
-        px: { xs : 3, md: 10 },
-        py : { xs : 5, md: 8 },
-        mx: { xs : 2, md: 20 },
-        my: { xs : 1, md: 10 },
+        px: { xs : 3, md: 8 },
+        py : { xs : 5, md: 5 },
+        mx: { xs : 2, md: 25 },
+        my: { xs : 1, md: 5 },
         display: 'flex', 
         flexDirection: 'column', 
         backgroundColor: '#fff' }}
